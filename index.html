@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Startup Graveyard — Gulf Edition</title>
+<meta name="description" content="A forensic database of dead startups across 25+ countries — with a dedicated UAE wing. Study why they died, loot the wreckage, rebuild the idea.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0c0f; --panel:#111419; --panel2:#171b21; --line:#242a32; --line2:#303842;
+  --text:#e4e8ee; --muted:#8b939f; --dim:#5b6470;
+  --acid:#b6ff3b; --amber:#ffb020; --red:#ff5a5a; --cyan:#53d3ff; --uae:#00843d;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pix:'Press Start 2P',var(--mono);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--mono);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.07;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0 1px,transparent 1px 3px)}
+a{color:var(--acid);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.pix{font-family:var(--pix);letter-spacing:0;line-height:1.5}
+.k{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.14em}
+.sr{position:absolute;left:-9999px}
+
+/* header */
+header{position:sticky;top:0;z-index:50;background:rgba(10,12,15,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;color:var(--text)}
+.logo:hover{text-decoration:none}
+.logo .pix{font-size:11px}
+.logo .pix span{color:var(--acid)}
+.skull{width:28px;height:28px;image-rendering:pixelated}
+.navlinks{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.navlinks a{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 9px;border:1px solid transparent}
+.navlinks a:hover{color:var(--text);border-color:var(--line2);text-decoration:none}
+.navlinks a.uae{color:var(--acid)}
+@media (max-width:860px){.navlinks a:not(.uae):not(.db){display:none}}
+.navbtn{background:var(--acid);color:#0a0c0f;border:0;font-size:11px;letter-spacing:.1em;padding:7px 10px;font-weight:600}
+.navov{position:fixed;inset:0;background:rgba(5,6,8,.94);z-index:90;display:none;overflow:auto;padding:70px 20px 40px}
+.navov.open{display:block}
+.navov .grid2{max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.navov a{display:block;background:var(--panel);border:1px solid var(--line2);padding:16px;color:var(--text);font-size:13px}
+.navov a small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.navov a:hover{border-color:var(--acid);text-decoration:none}
+.navov .x{position:fixed;right:20px;top:14px;background:none;border:1px solid var(--line2);color:var(--text);width:36px;height:36px;font-size:18px}
+.page{display:none}
+.page.show{display:block}
+.back{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:18px;color:var(--muted)}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:8px;border-bottom:1px solid var(--line2)}
+.tbl td{padding:9px 8px;border-bottom:1px dashed var(--line);vertical-align:top}
+.tbl tr:hover td{background:var(--panel2)}
+.idea{background:var(--panel);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:8px}
+.idea h4{margin:0;font-size:15px}
+.idea p{margin:0;color:var(--muted);font-size:13px}
+.idea .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.idea .tags span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line2);padding:3px 6px;color:var(--muted)}
+.idea .tags span.o{color:var(--acid);border-color:#3a5a10}
+.rb{background:var(--panel);border:1px solid var(--line);padding:18px}
+.rb h4{margin:0 0 4px;font-size:16px}
+.rb .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:12px 0}
+.rb .steps div{background:var(--panel2);padding:10px;font-size:12px}
+.rb .steps .k{font-size:9px;color:var(--acid)}
+.mp{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 6px;border:1px solid}
+.mp.High{color:var(--acid);border-color:#3a5a10}.mp.Medium{color:var(--amber);border-color:#5a4a1a}.mp.Low{color:var(--muted);border-color:var(--line2)}
+.card-char{background:var(--panel);border:2px solid var(--amber);padding:20px;max-width:360px}
+.card-char div{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:8px 0;font-size:13px}
+.card-char div b{color:var(--amber)}
+.sel{background:var(--panel);border:1px solid var(--line2);color:var(--text);padding:8px 10px;font-family:var(--mono);font-size:12px}
+
+/* banner */
+.banner{background:var(--acid);color:#0a0c0f;font-family:var(--pix);font-size:10px;padding:8px 0;white-space:nowrap;overflow:hidden}
+.banner .track{display:inline-block;animation:marq 40s linear infinite;padding-left:100%}
+.banner span{margin-right:48px}
+@keyframes marq{to{transform:translateX(-100%)}}
+
+/* hero */
+.hero{padding:72px 0 44px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero h1{font-family:var(--pix);font-size:clamp(22px,4.2vw,46px);line-height:1.35;margin:0 0 18px;text-shadow:4px 4px 0 #1b3a00}
+.hero h1 em{font-style:normal;color:var(--acid)}
+.tag{font-size:17px;color:var(--muted);max-width:640px;margin:0 0 26px}
+.tag b{color:var(--text);font-weight:500}
+.live{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line2);padding:8px 12px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.live i{width:8px;height:8px;background:var(--red);border-radius:50%;box-shadow:0 0 0 0 rgba(255,90,90,.7);animation:pulse 1.6s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px rgba(255,90,90,0)}100%{box-shadow:0 0 0 0 rgba(255,90,90,0)}}
+.hero .ghost{position:absolute;right:-40px;top:20px;font-family:var(--pix);font-size:220px;color:#121820;line-height:1;user-select:none;pointer-events:none}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{border:1px solid var(--line2);background:var(--panel);color:var(--text);padding:12px 16px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;transition:transform .08s,background .15s}
+.btn:hover{background:var(--panel2);text-decoration:none}
+.btn:active{transform:translateY(1px)}
+.btn.p{background:var(--acid);color:#0a0c0f;border-color:var(--acid);font-weight:600}
+.btn.p:hover{background:#c8ff6a}
+.btn.u{border-color:var(--uae);color:#8be0a8}
+
+/* features */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:40px 0}
+.feat{background:var(--panel);padding:22px 20px;display:flex;flex-direction:column;gap:8px;min-height:150px;transition:background .15s}
+.feat:hover{background:var(--panel2)}
+.feat .ic{font-size:22px}
+.feat h3{margin:0;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.feat p{margin:0;color:var(--muted);font-size:13px}
+.feat .num{font-family:var(--pix);font-size:16px;color:var(--amber);margin-top:auto}
+
+/* sections */
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.sh h2{font-family:var(--pix);font-size:clamp(14px,2vw,20px);margin:0;line-height:1.5}
+.sh h2 small{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+.sh p{margin:0;color:var(--muted);max-width:520px;font-size:14px}
+
+/* UAE wing */
+.uaewing{background:linear-gradient(180deg,rgba(0,132,61,.08),transparent 60%)}
+.flagbar{height:4px;background:linear-gradient(90deg,#00843d 0 25%,#fff 25% 50%,#000 50% 75%,#ef3340 75%);margin-bottom:28px}
+.uaestats{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:28px}
+.uaestats div{background:var(--panel);padding:16px}
+.uaestats b{display:block;font-family:var(--pix);font-size:16px;color:var(--acid);margin-top:8px}
+.timeline{position:relative;padding-left:22px;border-left:2px dashed var(--line2);margin:12px 0 0}
+.tl{position:relative;padding:0 0 20px}
+.tl::before{content:"";position:absolute;left:-28px;top:6px;width:10px;height:10px;background:var(--red);border:2px solid var(--bg);outline:1px solid var(--line2)}
+.tl.z::before{background:var(--amber)}
+.tl.a::before{background:var(--cyan)}
+.tl .yr{font-family:var(--pix);font-size:10px;color:var(--amber)}
+.tl h4{margin:4px 0 2px;font-size:15px}
+.tl p{margin:0;color:var(--muted);font-size:13px}
+.tl button{background:none;border:0;color:var(--acid);padding:0;font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin-top:6px}
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:28px}
+.ins{border:1px solid var(--line);background:var(--panel);padding:18px}
+.ins .k{color:var(--acid)}
+.ins h4{margin:8px 0 6px;font-size:15px}
+.ins p{margin:0;color:var(--muted);font-size:13px}
+
+/* case of the week */
+.casewk{background:linear-gradient(180deg,rgba(255,176,32,.06),transparent 60%)}
+.cw{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+@media (max-width:820px){.cw{grid-template-columns:1fr}}
+.cw .file{background:var(--panel);border:1px solid var(--line2);padding:22px;position:relative}
+.cw .stamp{position:absolute;right:16px;top:16px;font-family:var(--pix);font-size:9px;color:var(--red);border:2px solid var(--red);padding:6px 8px;transform:rotate(6deg);opacity:.85}
+.cw h3{margin:4px 0 2px;font-size:24px}
+.cw .redact{background:#2a2f37;color:transparent;border-radius:2px;user-select:none;padding:0 4px}
+.cw .ev{margin:14px 0 0;padding-left:18px}
+.cw .ev li{margin:6px 0;font-size:14px}
+.cw .diag{background:var(--panel);border:1px solid var(--line2);padding:22px}
+.cw .opt{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line2);color:var(--text);padding:10px 12px;margin:6px 0;font-size:13px}
+.cw .opt:hover{border-color:var(--amber)}
+.cw .opt.pick{border-color:var(--acid);background:rgba(182,255,59,.08)}
+.cw .opt.right{border-color:var(--acid);background:rgba(182,255,59,.18)}
+.cw .opt.wrong{border-color:var(--red);background:rgba(255,90,90,.12)}
+.cw textarea{width:100%;margin-top:6px}
+.cw .causes2{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}
+@media (max-width:480px){.cw .causes2{grid-template-columns:1fr}}
+.cw .verdict{margin-top:14px;padding:14px;border:1px solid var(--line2);background:var(--panel2);display:none}
+.cw .verdict.show{display:block}
+.cw .tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.cw .score{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:10px}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;border:1px solid var(--line2)}
+.seg button{background:var(--panel);border:0;border-right:1px solid var(--line2);color:var(--muted);padding:9px 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acid);color:#0a0c0f;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line2);background:transparent;color:var(--muted);padding:6px 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.chip.on{border-color:var(--acid);color:var(--acid)}
+.chip.uaechip.on{border-color:var(--uae);color:#8be0a8;background:rgba(0,132,61,.12)}
+.search{position:relative;width:100%;margin:10px 0 18px}
+.search input{width:100%;background:var(--panel);border:1px solid var(--line2);color:var(--text);padding:16px 18px 16px 48px;font-family:var(--mono);font-size:15px;outline:none}
+.search input:focus{border-color:var(--acid);box-shadow:0 0 0 3px rgba(182,255,59,.12)}
+.search::before{content:">";position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--acid);font-family:var(--pix);font-size:14px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.search .note{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:10px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+@media (max-width:640px){.search .note{display:none}}
+
+/* stats bar */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:24px}
+.stat{background:var(--panel);padding:14px 16px}
+.stat b{display:block;font-family:var(--pix);font-size:14px;color:var(--text);margin-top:6px;word-break:break-word}
+.stat b.red{color:var(--red)} .stat b.acid{color:var(--acid)} .stat b.amb{color:var(--amber)}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);padding:18px;display:flex;flex-direction:column;gap:10px;position:relative;cursor:pointer;transition:transform .12s,border-color .12s}
+.card:hover{transform:translateY(-2px);border-color:var(--line2)}
+.card.uae{border-left:3px solid var(--uae)}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.card h3{margin:0;font-size:17px;line-height:1.3}
+.card .sub{color:var(--muted);font-size:12px}
+.badge{font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:4px 7px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
+.badge.dead{border-color:#5a2a2a;color:var(--red)}
+.badge.zombie{border-color:#5a4a1a;color:var(--amber)}
+.badge.acq{border-color:#1f4a5a;color:var(--cyan)}
+.card p{margin:0;color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;border-top:1px dashed var(--line2);padding-top:10px;margin-top:auto}
+.meta div{font-size:12px}
+.meta .k{font-size:9px}
+.meta b{display:block;font-size:13px;color:var(--text)}
+.cause{font-size:11px;color:var(--amber);letter-spacing:.06em;text-transform:uppercase}
+.empty{padding:60px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line2)}
+.empty .pix{font-size:12px;color:var(--text);margin-bottom:10px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(5,6,8,.82);display:none;z-index:100;overflow:auto;padding:30px 16px}
+.modal.open{display:block}
+.sheet{max-width:860px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);padding:28px;position:relative;animation:up .18s ease-out}
+@keyframes up{from{transform:translateY(12px);opacity:0}}
+.sheet .x{position:absolute;right:14px;top:14px;background:none;border:1px solid var(--line2);color:var(--muted);width:34px;height:34px;font-size:16px}
+.sheet .x:hover{color:var(--text)}
+.sheet h2{font-size:26px;margin:6px 0 4px}
+.sheet .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:16px 0 22px}
+.kv div{background:var(--panel2);padding:12px}
+.kv b{display:block;font-size:14px;margin-top:4px}
+.sheet h4{font-family:var(--pix);font-size:10px;color:var(--acid);margin:24px 0 10px;letter-spacing:0}
+.sheet ul{margin:0;padding-left:18px;color:var(--text)}
+.sheet li{margin:6px 0;font-size:14px}
+.lesson{border-left:3px solid var(--amber);padding:12px 14px;background:var(--panel2);font-size:14px}
+.rebuild{border:1px solid var(--line2);padding:14px;background:#0f1a08;font-size:14px}
+.rebuild .k{color:var(--acid)}
+.src a{display:block;font-size:12px;color:var(--cyan);word-break:break-all;margin:4px 0}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.panel{background:var(--panel);border:1px solid var(--line);padding:18px}
+.panel h3{margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.panel .k{margin-bottom:12px;display:block}
+svg text{font-family:var(--mono)}
+.dot{transition:r .12s;cursor:pointer}
+.dot:hover{r:9}
+.tip{position:fixed;pointer-events:none;background:#0a0c0f;border:1px solid var(--acid);color:var(--text);font-size:12px;padding:8px 10px;z-index:200;display:none;max-width:260px}
+
+/* framework */
+.anti{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.ap{background:var(--panel);border:1px solid var(--line);padding:20px}
+.ap .n{font-family:var(--pix);font-size:18px;color:var(--amber)}
+.ap h3{margin:10px 0 6px;font-size:16px}
+.ap p{margin:0 0 10px;color:var(--muted);font-size:13px}
+.ap .ex{font-size:12px;color:var(--text)}
+.ap .ex span{color:var(--acid)}
+
+/* quiz */
+.quiz{background:var(--panel);border:1px solid var(--line);padding:24px}
+.q{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
+.q p{margin:0;font-size:14px}
+.q .seg button{padding:7px 12px}
+.result{margin-top:18px;padding:16px;border:1px solid var(--line2);background:var(--panel2);display:none}
+.result.show{display:block}
+.result b.pix{display:block;font-size:14px;margin-bottom:8px}
+.bar{height:10px;background:var(--line);margin:10px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acid),var(--amber),var(--red));width:0;transition:width .4s}
+
+/* top10 */
+.top10{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.t10{background:var(--panel);border:1px solid var(--line);padding:18px}
+.t10 h3{margin:0 0 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber)}
+.t10 ol{margin:0;padding-left:22px}
+.t10 li{font-size:13px;margin:5px 0;color:var(--muted)}
+.t10 li b{color:var(--text);font-weight:500}
+.t10 li em{font-style:normal;color:var(--acid);font-size:11px}
+
+/* form */
+form{display:grid;gap:12px;max-width:560px}
+label{display:grid;gap:6px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{background:var(--panel);border:1px solid var(--line2);color:var(--text);padding:12px;font-family:var(--mono);font-size:14px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--acid)}
+.ok{display:none;border:1px solid var(--acid);padding:12px;font-size:13px;color:var(--acid)}
+.ok.show{display:block}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:12px}
+footer .disc{border:1px solid var(--line);background:var(--panel);padding:18px;margin-bottom:18px;line-height:1.7}
+.toplink{position:fixed;right:18px;bottom:18px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);padding:10px 12px;font-size:11px;letter-spacing:.1em;z-index:40}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo">
+      <svg class="skull" viewBox="0 0 14 14" aria-hidden="true" shape-rendering="crispEdges">
+        <rect x="3" y="1" width="8" height="1" fill="#e4e8ee"/><rect x="2" y="2" width="10" height="6" fill="#e4e8ee"/>
+        <rect x="3" y="8" width="8" height="2" fill="#e4e8ee"/><rect x="4" y="10" width="6" height="1" fill="#e4e8ee"/>
+        <rect x="4" y="11" width="1" height="2" fill="#e4e8ee"/><rect x="6" y="11" width="2" height="2" fill="#e4e8ee"/><rect x="9" y="11" width="1" height="2" fill="#e4e8ee"/>
+        <rect x="4" y="4" width="2" height="2" fill="#0a0c0f"/><rect x="8" y="4" width="2" height="2" fill="#0a0c0f"/><rect x="6.5" y="7" width="1" height="1" fill="#0a0c0f"/>
+        <rect x="4" y="4" width="1" height="1" fill="#b6ff3b"/><rect x="8" y="4" width="1" height="1" fill="#b6ff3b"/>
+      </svg>
+      <div class="pix">STARTUP <span>GRAVEYARD</span></div>
+    </a>
+    <nav class="navlinks" aria-label="Navigate">
+      <a href="#uae" class="uae">🇦🇪 UAE Wing</a>
+      <a href="#case" class="db">Case of the week</a>
+      <a href="#database-view" class="db">Database View</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#framework">Framework</a>
+      <a href="#lists">Top 10</a>
+      <a href="#insights">Insights</a>
+      <a href="#rebuilds">Rebuilds</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#risk">Risk Test</a>
+      <a href="#faq">FAQ</a>
+      <button class="navbtn" onclick="toggleNav()">☰ NAVIGATE</button>
+    </nav>
+  </div>
+</header>
+
+<div class="banner" aria-hidden="true"><div class="track" id="ticker"></div></div>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div class="ghost">☠</div>
+    <h1>THE STARTUP<br><em>GRAVEYARD</em><br><span style="font-size:.5em;color:var(--amber)">GULF EDITION</span></h1>
+    <p class="tag"><b>Loot the wreckage.</b> A forensic database of startups that died — including a dedicated wing for the UAE. Study the autopsy, steal the idea, rebuild it without the fatal flaw.</p>
+    <p class="tag" style="font-size:13px;margin-top:-10px">About three in four venture-backed startups never return investors' capital, by Harvard Business School lecturer Shikhar Ghosh's estimate (<a href="https://www.wsj.com/articles/SB10000872396390443720204578004980476429190" target="_blank" rel="noopener">WSJ, 2012</a>). This is where you learn to be the fourth.</p>
+    <div class="live"><i></i> LIVE DATA · <span id="liveCount">0</span> corpses · <span id="liveUae">0</span> from the UAE</div>
+    <div class="ctas">
+      <a class="btn p" href="#database">Enter the graveyard →</a>
+      <a class="btn u" href="#uae">🇦🇪 Visit the UAE wing</a>
+      <a class="btn" href="#case">🔍 Case of the week</a>
+      <a class="btn" href="#database-view">🗄️ Database view</a>
+      <a class="btn" href="#rebuilds">🔧 Rebuild plans</a>
+      <a class="btn" href="#ideas">💡 Ideas</a>
+    </div>
+
+    <div class="feats">
+      <a class="feat" href="#framework"><div class="ic">🧠</div><h3>Learning Framework</h3><p>The recurring ways startups die, with Gulf examples.</p><div class="num">7 ANTIPATTERNS</div></a>
+      <a class="feat" href="#uae"><div class="ic">🇦🇪</div><h3>UAE Deep Dive</h3><p>Verified UAE failures, 2012–2025, with sources.</p><div class="num" id="featUae">0 CASES</div></a>
+      <a class="feat" href="#database"><div class="ic">💡</div><h3>Rebuild Plans</h3><p>Every autopsy ends with a "rebuild it right" plan.</p><div class="num" id="featRebuild">0 PLANS</div></a>
+      <a class="feat" href="#case"><div class="ic">🔍</div><h3>Case of the Week</h3><p>Cause of death redacted. Diagnose it before the reveal.</p><div class="num">CLASSROOM</div></a>
+      <a class="feat" href="#lists"><div class="ic">🏆</div><h3>Top 10 Lists</h3><p>Biggest burns, shortest lives, by sector, by country.</p><div class="num">12 LISTS</div></a>
+      <a class="feat" href="#dashboard"><div class="ic">📊</div><h3>Interactive Dashboard</h3><p>Burn zone, cause-of-death, survival curve.</p><div class="num">FORENSICS</div></a>
+    </div>
+    <div class="top10" id="rails" style="margin-top:-20px"></div>
+  </div>
+</section>
+
+<section id="featured-home">
+  <div class="wrap">
+    <div class="sh"><h2><small>Featured autopsies</small>📰 LONG READS FROM THE UAE WING</h2><p>Three cases told as stories, not records. Five-minute reads with sources, for seminar prep.</p></div>
+    <div class="feats" style="margin:0;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))" id="featGrid"></div>
+  </div>
+</section>
+
+<!-- UAE WING -->
+<section id="uae" class="uaewing">
+  <div class="wrap">
+    <div class="flagbar"></div>
+    <div class="sh">
+      <h2><small>Deep dive · United Arab Emirates</small>🇦🇪 THE UAE WING</h2>
+      <p>Dubai raises loudly and dies quietly. These are the documented cases — most from 2017–2021's e-commerce reckoning, plus a 2025 proptech wind-down.</p>
+    </div>
+    <div class="uaestats" id="uaeStats"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px" class="two">
+      <div>
+        <div class="k" style="margin-bottom:10px">Timeline of deaths</div>
+        <div class="timeline" id="uaeTimeline"></div>
+      </div>
+      <div>
+        <div class="k" style="margin-bottom:10px">What the UAE corpses have in common</div>
+        <div class="insights" style="grid-template-columns:1fr;margin-top:0">
+          <div class="ins"><div class="k">Pattern 01</div><h4>Raising ≠ winning</h4><p>Awok died 16 months after a $30M Series A. Fetchr was valued near $300M and still needed a $10M bail-out. In the Gulf, a big round is often reported as the finish line. It is the starting gun on a bigger burn.</p></div>
+          <div class="ins"><div class="k">Pattern 02</div><h4>Small home market, expensive expansion</h4><p>Every UAE e-commerce corpse expanded to Saudi (Awok, Sprii, Wadi, Fetchr). The UAE alone is ~10M people; Saudi is the prize, but it requires local licences, tax structures and logistics that killed Fetchr via a disputed $100M tax bill.</p></div>
+          <div class="ins"><div class="k">Pattern 03</div><h4>"Global situation" as the stated cause</h4><p>Awok, The Modist and Sprii all blamed COVID. Reporting on each shows cash-flow and margin problems pre-dating the pandemic. The pandemic was the trigger, not the disease.</p></div>
+          <div class="ins"><div class="k">Pattern 04</div><h4>Acqui-shutdowns are a Gulf exit</h4><p>JadoPado (→Noon) and Munch:On (→Careem) were bought and switched off within weeks. A strategic buyer may want your team or your silence, not your product.</p></div>
+        </div>
+      </div>
+    </div>
+    <style>@media (max-width:820px){.two{grid-template-columns:1fr!important}}</style>
+  </div>
+</section>
+
+<!-- CASE OF THE WEEK -->
+<section id="case" class="casewk">
+  <div class="wrap">
+    <div class="sh">
+      <h2><small>Classroom mode</small>🔍 CASE OF THE WEEK</h2>
+      <p>The cause of death is hidden. Read the evidence, diagnose it, then reveal the autopsy. The case rotates automatically every week. Names and giveaway words are redacted; some cases are still easier than others — that's a discussion point, not a bug.</p>
+    </div>
+    <div class="cw" id="cw"></div>
+  </div>
+</section>
+
+<!-- DATABASE -->
+<section id="database">
+  <div class="wrap">
+    <div class="sh">
+      <h2><small>Database view</small>SEARCH THE GRAVEYARD</h2>
+      <p>Click any corpse for its full autopsy. Prefer a table? Open the <a href="#database-view">Database View</a>.</p>
+    </div>
+
+    <div class="controls">
+      <div class="seg" id="sortSeg" role="group" aria-label="Sort">
+        <button data-sort="newest" class="on">✨ Newest</button>
+        <button data-sort="burned">🔥 Burned</button>
+        <button data-sort="died">💀 Died</button>
+      </div>
+      <div class="chips" id="regionChips">
+        <button class="chip on" data-region="all">All regions</button>
+        <button class="chip uaechip" data-region="UAE">🇦🇪 UAE only</button>
+        <button class="chip" data-region="global">Rest of world</button>
+      </div>
+    </div>
+    <div class="controls" style="margin-bottom:6px"><select class="sel" id="countrySel"><option value="">🌍 All countries</option></select><div class="chips" id="sectorChips"></div></div>
+
+    <div class="search">
+      <input id="q" type="search" placeholder="SEARCH THE GRAVEYARD... (name, sector, cause, city)" autocomplete="off" aria-label="Search">
+      <span class="note">Improved search — typos OK</span>
+    </div>
+
+    <div class="stats" id="stats"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none"><div class="pix">NO CORPSES FOUND</div>Nothing matches your search. Try a sector, a city, or a cause of death.</div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard">
+  <div class="wrap">
+    <div class="sh">
+      <h2><small>Interactive dashboard</small>FORENSICS &amp; DATA</h2>
+      <p>Charts respond to the region filter above. Hover a point for the corpse; click to open its autopsy.</p>
+    </div>
+    <div class="dash">
+      <div class="panel" style="grid-column:1/-1"><h3>The Burn Zone</h3><span class="k">X: lifespan (years) · Y: capital raised (USD, log) · green = UAE</span><div id="burn"></div></div>
+      <div class="panel"><h3>Cause of death</h3><span class="k">Primary cause, count of corpses</span><div id="causes"></div></div>
+      <div class="panel"><h3>Time-to-failure</h3><span class="k">Share of corpses still alive at age N (all eventually die → 0%)</span><div id="surv"></div></div>
+      <div class="panel"><h3>Sector heat</h3><span class="k">Where the bodies are buried</span><div id="sectors"></div></div>
+      <div class="panel"><h3>UAE vs rest of world</h3><span class="k">Medians, this dataset only</span><div id="compare"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAMEWORK -->
+<section id="framework">
+  <div class="wrap">
+    <div class="sh">
+      <h2><small>Learning framework</small>7 FAILURE ANTIPATTERNS</h2>
+      <p>Not "ran out of money" — that's the symptom. These are the diseases, each tied to a corpse in the database.</p>
+    </div>
+    <div class="anti" id="anti"></div>
+  </div>
+</section>
+
+<!-- TOP 10 -->
+<section id="top10">
+  <div class="wrap">
+    <div class="sh"><h2><small>Curated lists</small>TOP 10 OF EVERYTHING</h2><p>Computed live from the database. <a href="#lists">See all 12 lists →</a></p></div>
+    <div class="top10" id="homeLists"></div>
+  </div>
+</section>
+
+<!-- RISK -->
+<section id="risk">
+  <div class="wrap">
+    <div class="sh"><h2><small>Risk assessment</small>WHICH MISTAKES ARE YOU MAKING?</h2><p>Answer honestly. Each "yes" maps to an antipattern that killed at least one UAE startup.</p></div>
+    <div class="quiz" id="quiz"></div>
+  </div>
+</section>
+
+<!-- ADD -->
+<section id="add">
+  <div class="wrap">
+    <div class="sh"><h2><small>Submit a startup</small>⚰️ BURY A CORPSE</h2><p>Students and visitors can file a full case. It becomes a real card tagged with your name, shared with everyone who can open this page (Contributor access or above). Export/Import JSON is the fallback.</p></div>
+    <div class="k" id="shareStatus" style="margin:-6px 0 16px">○ Connecting to shared storage…</div>
+    <form id="subForm" onsubmit="submitCase(event)" style="max-width:860px;grid-template-columns:1fr 1fr;display:grid;gap:12px">
+      <label>Startup name *<input name="name" required placeholder="e.g. Fetchr"></label>
+      <label>Submitted by<input name="by" placeholder="Your name or 'Anonymous'"></label>
+      <label>Country<input name="country" placeholder="UAE"></label>
+      <label>City<input name="city" placeholder="Dubai"></label>
+      <label>Sector<input name="sector" placeholder="E-commerce, Fintech, Logistics…"></label>
+      <label>Product type<input name="ptype" placeholder="Marketplace, Mobile App, SaaS (B2B)…"></label>
+      <label>Founded<input name="founded" type="number" placeholder="2015"></label>
+      <label>Died<input name="died" type="number" placeholder="2020"></label>
+      <label>Funding raised (USD millions)<input name="raised" type="number" step="0.1" placeholder="30"></label>
+      <label>Cause of death *<select name="cause" required><option>Ran out of cash</option><option>Flawed business model</option><option>Scaling too fast</option><option>Legal or regulatory issues</option><option>No product-market fit</option><option>Timing or market conditions</option><option>Technology failure</option><option>Poor execution</option><option>Acquired or shut by owner</option></select></label>
+      <label style="grid-column:1/-1">What it did and how it died (2–3 sentences) *<textarea name="summary" rows="3" required></textarea></label>
+      <label style="grid-column:1/-1">Evidence (one point per line)<textarea name="evidence" rows="3" placeholder="Raised $X then…&#10;Lost its biggest customer…"></textarea></label>
+      <label>Final lesson<input name="lesson" placeholder="One sentence"></label>
+      <label>Rebuild plan<input name="rebuild" placeholder="What you'd build instead"></label>
+      <label style="grid-column:1/-1">Source link<input name="source" type="url" placeholder="https://…"></label>
+      <div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap"><button class="btn p" type="submit">Bury the corpse</button><button class="btn" type="button" onclick="exportSubs()">Export class cases (JSON)</button><button class="btn" type="button" onclick="importSubs()">Import from box below</button></div>
+      <div class="ok" id="subOk" style="grid-column:1/-1"></div>
+      <textarea id="subExport" rows="5" style="grid-column:1/-1;display:none;font-size:11px" placeholder="Paste exported JSON here, then click Import"></textarea>
+    </form>
+    <style>@media (max-width:640px){#subForm{grid-template-columns:1fr!important}}</style>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="sh"><h2><small>FAQ</small>QUESTIONS FROM THE LIVING</h2></div>
+    <div class="insights" style="margin-top:0">
+      <div class="ins"><h4>Where does the data come from?</h4><p>Public reporting (MENAbytes, Wamda, Gulf Business, Bloomberg, TechCrunch, Wikipedia). Each UAE autopsy lists its sources. Funding figures are "disclosed" figures and may undercount.</p></div>
+      <div class="ins"><h4>Why is Swvl here if it still exists?</h4><p>It's tagged <b>Zombie</b>: Dubai-HQ'd, SPAC'd at $1.5B, stock fell ~99%, sold off most markets. It didn't die, but the company that listed no longer exists in any meaningful sense.</p></div>
+      <div class="ins"><h4>What counts as a UAE startup?</h4><p>Headquartered or principally operated from the UAE at the time of death. Swvl moved its HQ to Dubai pre-SPAC; Wadi was Dubai-HQ'd but Saudi-focused.</p></div>
+      <div class="ins"><h4>Why only 9 causes of death?</h4><p>Causes are collapsed into a standard taxonomy (ran out of cash, flawed business model, scaling too fast, legal/regulatory, no product-market fit, timing/market, technology failure, poor execution, acquired/shut by owner) so the quiz and charts are fair. The finer-grained detail is shown under each cause.</p></div>
+      <div class="ins"><h4>Can I use this in class?</h4><p>Yes. The UAE timeline, antipatterns and risk test were built for teaching entrepreneurship and strategy. Click a corpse and project the autopsy.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SUB PAGES (hash-routed) ===== -->
+<section id="lists" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>Top 10 lists</small>📂 TOP 10 OF EVERYTHING</h2><p>Every list is computed live from the database — add a corpse and the lists move.</p></div>
+    <div class="top10" id="allLists"></div>
+  </div>
+</section>
+
+<section id="insights" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>The meta-study</small>📊 INSIGHTS: WHY THEY FAILED</h2><p>Startups rarely die of one thing — it is death by a thousand cuts. <b>Primary question:</b> which cut came first, and was it visible 12 months out?</p></div>
+    <h3 class="pix" style="font-size:11px;color:var(--amber)">00. TIME-TO-FAILURE</h3>
+    <p style="color:var(--muted);font-size:14px" id="insSurvText"></p>
+    <h3 class="pix" style="font-size:11px;color:var(--amber);margin-top:30px">01. TOP FAILURE CATEGORIES</h3>
+    <p style="color:var(--muted);font-size:12px">Primary cause only, so percentages total 100%. Hover the database for secondary causes.</p>
+    <table class="tbl" id="insTable"></table>
+    <h3 class="pix" style="font-size:11px;color:var(--amber);margin-top:30px">02. DEEP DIVE &amp; INDUSTRY PATTERNS</h3>
+    <div class="insights" id="insPatterns" style="margin-top:12px"></div>
+    <h3 class="pix" style="font-size:11px;color:var(--amber);margin-top:30px">03. EMERGING THEMES FOR REVIVAL (GCC EDITION)</h3>
+    <div class="insights" style="margin-top:12px">
+      <div class="ins"><div class="k">Theme A</div><h4>The "Licence-first" expansion</h4><p><b>Failure pattern:</b> UAE startups launched in Saudi under partner licences and paid for it later (Fetchr's $100M tax bill).<br><b>Revival fix:</b> Treat KSA entry as a regulatory product: MISA licence, ZATCA registration and local entity <i>before</i> the first shipment. Budget it as capex, not overhead.</p></div>
+      <div class="ins"><div class="k">Theme B</div><h4>The "Asset-light operator"</h4><p><b>Failure pattern:</b> Software companies that quietly became hotels, warehouses or fleets (Silkhaus, Fetchr, Webvan, Sonder).<br><b>Revival fix:</b> License the software to the people who already own the assets. Revenue per unit, zero leases, zero vehicles.</p></div>
+      <div class="ins"><div class="k">Theme C</div><h4>The "Contribution-margin gate"</h4><p><b>Failure pattern:</b> Discount-led e-commerce where every order lost money (Awok, Sprii, Pets.com).<br><b>Revival fix:</b> No SKU goes live unless price − COGS − delivery − expected returns &gt; 0. Growth is throttled by margin, not by marketing budget.</p></div>
+      <div class="ins"><div class="k">Theme D</div><h4>The "Platform-proof feature"</h4><p><b>Failure pattern:</b> Munch:On, JadoPado, Fast — bought or copied by the platform that owned distribution.<br><b>Revival fix:</b> Build on the seller/operator side of the platform (tools, compliance, financing), where Careem and Noon are customers, not competitors.</p></div>
+    </div>
+    <h3 class="pix" style="font-size:11px;color:var(--amber);margin-top:30px">04. KEY LEARNINGS FOR FOUNDERS</h3>
+    <ul style="font-size:14px;line-height:1.8;columns:2;column-gap:40px" class="learn">
+      <li><b>Validate demand first</b> — Quibi, Juicero and Zume built supply for demand that never existed.</li>
+      <li><b>A round is runway, not revenue</b> — Awok died 16 months after its $30M.</li>
+      <li><b>Know your margin per order</b> — if it's negative, scale is suicide.</li>
+      <li><b>One market to profit before two</b> — Saudi can wait; Swvl's 18 countries could not.</li>
+      <li><b>Regulatory structure is a balance-sheet item</b> — Fetchr, Homejoy.</li>
+      <li><b>Don't be a feature</b> — if a super-app can ship it in a quarter, it will.</li>
+      <li><b>Diversify your oxygen</b> — one parent, customer or investor can switch you off (Nisnass, Mizado, Argo).</li>
+      <li><b>A trend is not a moat</b> — The Modist was copied by Net-a-Porter within a year.</li>
+      <li><b>Public markets aren't patient</b> — SPAC into a closing window and you are short your own currency.</li>
+      <li><b>Pay your suppliers</b> — the Awok and Sprii collapses were public on Reddit before the press release.</li>
+      <li><b>Timing is a cause of death</b> — Kite shut months before Copilot.</li>
+      <li><b>Know what the buyer is buying</b> — an acqui-hire is a funeral for the product.</li>
+    </ul>
+    <div class="lesson" style="margin-top:20px"><b>The ultimate loot tip:</b> every corpse here left behind a validated problem. The problem is still alive; only the solution died.</div>
+  </div>
+</section>
+
+<section id="deep-dives" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small><span id="ddCount">0</span> product categories analysed</small>🔬 PRODUCT TYPE DEEP DIVES</h2><p>Every category has its own way of dying. Pick one to see its corpses, primary killer and the pattern.</p></div>
+    <div class="anti" id="ddGrid"></div>
+  </div>
+</section>
+
+<section id="ideas" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>Business ideas directory</small>💡 STARTUP IDEAS</h2><p>Ideas extracted from the autopsies — each one keeps the validated problem and drops the fatal flaw. GCC-flavoured where it makes sense.</p></div>
+    <div class="controls">
+      <select class="sel" id="iModel"><option value="">All models</option><option>Subscription</option><option>One-time</option><option>Marketplace</option><option>Agency</option><option>SaaS</option><option>B2B contract</option></select>
+      <select class="sel" id="iEffort"><option value="">Any effort</option><option>Weekend project</option><option>1–3 months</option><option>6+ months</option></select>
+      <select class="sel" id="iSpeed"><option value="">Any speed</option><option>Quick cash</option><option>Medium runway</option><option>Long game</option></select>
+      <select class="sel" id="iInd"><option value="">All industries</option></select>
+      <input class="sel" id="iQ" placeholder="keyword…" style="flex:1;min-width:160px">
+      <button class="btn p" onclick="luckyLoot()">🎲 Lucky loot (5 random)</button>
+    </div>
+    <div class="k" id="iCount" style="margin:10px 0"></div>
+    <div class="grid" id="ideaGrid"></div>
+  </div>
+</section>
+
+<section id="rebuilds" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>From graveyard to goldmine</small>🔧 STARTUP REBUILD PLANS</h2><p>Every failed startup is a rebuild opportunity. What to build, market, build steps, tech stack, revenue model — and the mistake to avoid.</p></div>
+    <div class="controls">
+      <select class="sel" id="rSector"><option value="">All sectors</option></select>
+      <select class="sel" id="rCountry"><option value="">All countries</option></select>
+      <select class="sel" id="rCause"><option value="">All causes</option></select>
+      <select class="sel" id="rMp"><option value="">Any market potential</option><option>High</option><option>Medium</option><option>Low</option></select>
+      <div class="seg" id="rSort"><button data-s="newest" class="on">Newest</button><button data-s="mp">Market potential</button><button data-s="easy">Easiest build</button><button data-s="funded">Most funded</button></div>
+      <button class="chip" onclick="rbClear()">Clear all</button>
+    </div>
+    <div class="k" id="rCount" style="margin:10px 0"></div>
+    <div style="display:grid;gap:14px" id="rbGrid"></div>
+  </div>
+</section>
+
+<section id="database-view" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>Explore failures like an operator</small>🗄️ DATABASE VIEW</h2><p>Filter the full graveyard dataset, then switch to the <a href="#dashboard">dashboard</a> to spot patterns before they kill your startup. Click a row for the autopsy.</p></div>
+    <div class="controls">
+      <input class="sel" id="dvQ" placeholder="Search startup name, summary, or cause…" style="flex:1;min-width:220px">
+      <select class="sel" id="dvSort"><option value="newest">Newest</option><option value="burned">Most funded</option><option value="died">Shortest life</option><option value="name">A–Z</option></select>
+      <select class="sel" id="dvSector"><option value="">All sectors</option></select>
+      <select class="sel" id="dvType"><option value="">All product types</option></select>
+      <select class="sel" id="dvCountry"><option value="">All countries</option></select>
+      <select class="sel" id="dvCause"><option value="">All causes of death</option></select>
+      <select class="sel" id="dvStatus"><option value="">All statuses</option><option>Dead</option><option>Zombie</option><option>Acqui-shut</option></select>
+      <button class="chip" onclick="dvClear()">Clear filters</button>
+    </div>
+    <div class="k" id="dvCount" style="margin:10px 0"></div>
+    <div style="overflow:auto"><table class="tbl" id="dvTable"></table></div>
+    <div class="controls" style="justify-content:center;margin-top:14px"><button class="btn" onclick="DV.page--;renderDV()">Previous</button><span class="k" id="dvPage"></span><button class="btn" onclick="DV.page++;renderDV()">Next</button></div>
+    <div class="k" style="margin-top:14px">~ = approximate funding from public reporting · ✓ = sourced in the autopsy · Scores: Market potential, Scale reached (funding), Rebuild ease — 1 to 5</div>
+  </div>
+</section>
+
+<section id="featured" class="page">
+  <div class="wrap"><a class="back" href="#top">&lt; Back to graveyard</a><div id="featBody"></div></div>
+</section>
+
+<section id="story" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>The story behind</small>📖 WHAT IS THIS SITE?</h2></div>
+    <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:28px" class="two">
+      <div style="font-size:15px;line-height:1.8">
+        <p>The startup-graveyard genre started as a US/Europe thing: lists of Silicon Valley money that went up in smoke. Reading them from the Gulf, something was missing — <b>our</b> corpses. Awok, Fetchr, Sprii, The Modist and Wadi raised real money, employed thousands of people in Dubai, and died within a four-year window. Almost nobody teaches them.</p>
+        <p>This site rebuilds the graveyard format with a dedicated <a href="#uae">UAE wing</a>: documented cases with sources, the patterns they share, and a <a href="#case">Case of the Week</a> mode so students diagnose a failure before the autopsy is revealed. The global corpses are there for contrast — the Gulf kills early-stage companies in e-commerce; the US kills late-stage ones in healthtech and hardware.</p>
+        <p>Design is neo-brutalist with a gaming theme, because reading about failure should feel like looting a dungeon, not reading an obituary. It is a work in progress: data is AI-assisted from public reporting, and corrections are welcome through <a href="#add">Add a corpse</a>.</p>
+        <p><b>Start looting.</b></p>
+      </div>
+      <div class="card-char">
+        <div class="pix" style="font-size:10px;color:var(--amber);margin-bottom:10px;border:0">CHARACTER CARD</div>
+        <div><span>Class</span><b>Level 1 Graveyard Keeper</b></div>
+        <div><span>Origin</span><b>Management academic, UAE</b></div>
+        <div><span>Weapon</span><b>Spreadsheet + source links</b></div>
+        <div><span>Loot found</span><b id="storyLoot">—</b></div>
+        <div><span>Special move</span><b>Case of the Week</b></div>
+        <div><span>Status</span><b>Caffeinated</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="roadmap" class="page">
+  <div class="wrap">
+    <a class="back" href="#top">&lt; Back to graveyard</a>
+    <div class="sh"><h2><small>Death watch featurelist</small>🗺️ ROADMAP 💀</h2><p>What's built, what's next. Request features through <a href="#add">Add a corpse</a>.</p></div>
+    <table class="tbl" id="roadTbl"></table>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="disc"><b>Disclaimer.</b> This is an educational, AI-assisted compilation drawn from public sources. Causes of death are interpretations of reporting, not legal findings. Funding is disclosed funding and is approximate. Provided "as is" — if you spot an error, use <a href="#add">Add a corpse</a> to request a correction. Format inspired by the startup-graveyard genre of sites; this is an independent build.</div>
+    <div>Startup Graveyard · Gulf Edition · Built for founders, students and the morbidly curious.</div>
+  </div>
+</footer>
+<a class="toplink" href="#top">↑ TOP</a>
+
+<div class="navov" id="navov">
+  <button class="x" onclick="toggleNav()">×</button>
+  <div class="pix" style="text-align:center;font-size:12px;margin-bottom:20px;color:var(--acid)">NAVIGATE</div>
+  <div class="grid2">
+    <a href="#lists" onclick="toggleNav()">📂 Top 10 of Everything<small>Biggest burns, shortest lives, by sector</small></a>
+    <a href="#framework" onclick="toggleNav()">🔮 Learning Framework<small>7 failure antipatterns</small></a>
+    <a href="#deep-dives" onclick="toggleNav()">🔬 Deep Dives<small>Failure by product category</small></a>
+    <a href="#insights" onclick="toggleNav()">📊 Insights<small>The meta-study</small></a>
+    <a href="#dashboard" onclick="toggleNav()">📈 Dashboard<small>Forensics &amp; data</small></a>
+    <a href="#database-view" onclick="toggleNav()">🗄️ Database View<small>Filterable table of every corpse</small></a>
+    <a href="#database" onclick="toggleNav()">🪦 Graveyard cards<small>Home grid with search</small></a>
+    <a href="#rebuilds" onclick="toggleNav()">🔧 Rebuild Plans<small>What to build instead</small></a>
+    <a href="#ideas" onclick="toggleNav()">💡 Ideas<small>Startup ideas directory</small></a>
+    <a href="#uae" onclick="toggleNav()">🇦🇪 UAE Wing<small>Verified UAE cases</small></a>
+    <a href="#case" onclick="toggleNav()">🔍 Case of the Week<small>Classroom diagnosis mode</small></a>
+    <a href="#featured-home" onclick="toggleNav()">📰 Featured autopsies<small>Long reads from the UAE wing</small></a>
+    <a href="#story" onclick="toggleNav()">📖 Story<small>What is this site?</small></a>
+    <a href="#roadmap" onclick="toggleNav()">🗺️ Roadmap<small>Death watch featurelist</small></a>
+    <a href="#risk" onclick="toggleNav()">🩺 Risk Test<small>Which mistakes are you making?</small></a>
+    <a href="#faq" onclick="toggleNav()">❓ FAQ<small>Questions from the living</small></a>
+  </div>
+</div>
+<!-- modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="sheet" id="sheet"></div>
+</div>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ===================== DATA ===================== */
+const D = [
+/* ---------- UAE ---------- */
+{id:'awok',name:'Awok.com',country:'UAE',city:'Dubai',sector:'E-commerce',founded:2013,died:2020,raised:30,cause:'Cash mismanagement',status:'Dead',
+ summary:'Mass-market, ultra-low-price e-commerce (items from AED 1). ~10M monthly visitors, 700+ staff, expanded to Saudi 2017. Raised a $30M Series A in April 2019 and ceased operations in August 2020, blaming "the current global situation".',
+ autopsy:['Series A ($30M, StonePine ACE + Al-Faisaliah Ventures + Endeavor Catalyst) was its first external money after years bootstrapped — the org never learned to spend other people\'s money.','Reported unpaid supplier/logistics debt of over AED 60M dating from late 2018 — before the raise.','Low-ticket, high-return, high-CAC unit economics: each order plausibly lost money.','Orders kept being accepted while fulfilment and refunds had stopped — trust collapsed publicly on Reddit and Twitter before the official statement.','Shut down during the 2020 e-commerce boom: market was not the problem.'],
+ lesson:'A funding round is a liability with a growth clause. If gross margin per order is negative, capital accelerates death.',
+ rebuild:'A UAE value marketplace with contribution-margin gating: SKUs only listed if (price − COGS − delivery − expected returns) > 0; vendor-fulfilled with marketplace escrow so you never carry supplier debt; Saudi expansion only after UAE operating profit.',
+ sources:[['MENAbytes – Awok shuts down','https://www.menabytes.com/awok-shuts-down/'],['Wamda – Pandemic victim or cash mismanagement?','https://www.wamda.com/en/2020/09/awok-failure-pandemic-victim-cash-mismanagement'],['Gulf Business','https://gulfbusiness.com/en/2020/uae/uae-e-commerce-platform-awok-shuts-shop']]},
+
+{id:'fetchr',name:'Fetchr',country:'UAE',city:'Dubai',sector:'Logistics',founded:2012,died:2021,raised:77,cause:'Regulatory / tax exposure',status:'Dead',
+ summary:'GPS-based last-mile courier ("your phone is your address"). Raised $11M Series A (2015) and $41M Series B (2017, NEA, MAF) at a ~$300M valuation. Nearly collapsed end-2019, rescued with $10M emergency funding that diluted founders to ~zero; cut ~1,230 jobs; then hit with a disputed ~$100M Saudi VAT/Zakat bill in 2021 and declared insolvent by its top backer.',
+ autopsy:['Burned the 2017 Series B on warehouses and fleet; lost its biggest customer (JollyChic) in 2018 when it built its own logistics.','Call-centre meltdown during White Friday 2018 destroyed seller trust.','Operated in Saudi under a local partner\'s licence; tax paid via the partner left no receipts — the structure became a $100M liability.','Two rescues (Dec 2019 $10M; 2020 $15M) bought time but not a changed cost base.','Founders and early team were wiped out by the bridge round before the final blow.'],
+ lesson:'In the GCC, regulatory structure is a balance-sheet item. A licence workaround is debt you haven\'t booked yet.',
+ rebuild:'Asset-light last-mile orchestration: software layer over licensed local fleets in each GCC state, owning routing and address-resolution data but not vehicles; tax and licensing audited per country before launch.',
+ sources:[['Bloomberg via Gulf News – narrowly averts collapse','https://gulfnews.com/technology/companies/dubai-based-fetchr-narrowly-averts-collapse-1.68247559'],['Wamda – Fetchr at risk of liquidation','https://www.wamda.com/en/2021/10/fetchr-risk-liquidation'],['KrASIA – $15M after cutting 1,200 jobs','https://kr-asia.com/fetchr-secures-usd-15-million-in-fresh-funds-after-cutting-over-1200-jobs-report']]},
+
+{id:'wadi',name:'Wadi.com',country:'UAE',city:'Dubai',sector:'E-commerce',founded:2015,died:2019,raised:97,cause:'Outcompeted',status:'Dead',
+ summary:'Rocket Internet / MTN-backed general marketplace, Dubai HQ, Saudi focus. Raised a $67M Series A (2016, Al Tayyar) to fight Souq. Lost the marketplace war to Souq (→Amazon) and Noon, pivoted to Saudi grocery in 2018, took $30M from Majid Al Futtaim, shut the marketplace entirely in 2019 and was absorbed by MAF.',
+ autopsy:['Entered a two-horse race (Souq, Noon) with the least capital and no warehouses of its own.','Rocket playbook — clone, blitz, exit — met a market where Amazon arrived first.','Lead investor refused follow-on; grocery pivot was a survival move, not a strategy.','Founders stepped down within weeks of the MAF investment.'],
+ lesson:'Third place in a winner-take-most marketplace is a liquidation plan with extra steps.',
+ rebuild:'Never general marketplace. Vertical B2B procurement for GCC SMEs (restaurants, salons, clinics) where Amazon/Noon are weak and margins are negotiated, not raced to zero.',
+ sources:[['MENAbytes – Wadi shuts down marketplace','https://www.menabytes.com/wadi-shuts-down-marketplace/'],['Wamda – MAF acquires Wadi','https://www.wamda.com/en/2019/05/majid-al-futtaim-acquires-wadicom'],['PYMNTS – $67M Series A','https://pymnts.com/?p=202303']]},
+
+{id:'sprii',name:'Sprii',country:'UAE',city:'Dubai',sector:'E-commerce',founded:2014,died:2020,raised:15,cause:'Failed to raise',status:'Dead',
+ summary:'Mum-and-baby marketplace (ex-Mini Exchange), inventory-free model, 100+ staff, present in UAE, KSA, Kuwait, Oman, Bahrain. Raised $8.5M Series A in 2019 (total ~$13–15M, investors undisclosed). Placed into liquidation Dec 2020 after failing to raise or sell; vendors unpaid for months.',
+ autopsy:['"User at any cost" discounting in a category owned by a better-funded rival (Mumzworld).','Inventory-free model shifted margin to partners — then couldn\'t pay them.','Expanded to Saudi 18 months before death.','Never disclosed investors; no deep-pocketed insider to bridge it.'],
+ lesson:'Being #2 in a thin-margin vertical with a secretive cap table means no one shows up with the cheque when the music stops.',
+ rebuild:'Parenting subscription + community (consumables on autoship, curated by age) with a 40%+ private-label mix, UAE-only until unit economics are proven.',
+ sources:[['KrASIA/MENAbytes – Sprii enters liquidation','https://kr-asia.com/dubais-sprii-enters-liquidation-after-running-out-of-cash'],['Gulf Business','https://gulfbusiness.com/en/2020/covid-19/dubai-e-commerce-platform-sprii-goes-into-liquidation-after-failing-to-raise-more-capital']]},
+
+{id:'modist',name:'The Modist',country:'UAE',city:'Dubai',sector:'Fashion',founded:2017,died:2020,raised:15,cause:'Failed to raise',status:'Dead',
+ summary:'Luxury modest-fashion e-tailer ("Net-a-Porter for modest wear"), shipping to 120+ countries, own label Layeur. Raised $15M led by Vaultier7 (2018) with Chalhoub, then Farfetch and Nicola Bulgari (2019). Closed April 2020 while trying to raise a Series B, citing COVID; sources say cash-flow trouble pre-dated it.',
+ autopsy:['Category it pioneered was copied within a year by Net-a-Porter, ASOS, Zara, Matches — incumbents with far cheaper CAC.','45% of sales came from US/UK where it competed head-on with those incumbents.','Luxury inventory + global shipping + Dubai cost base: capital-hungry before revenue.','Series B market vanished in March 2020.'],
+ lesson:'If your moat is a trend, incumbents will own it the moment it trends. Own the brands, not the edit.',
+ rebuild:'Own-brand modest luxury house (DTC + wholesale to the incumbents\' modest edits), manufactured in the region, with the GCC and Southeast Asia as home markets rather than London.',
+ sources:[['MENAbytes – The Modist shuts down','https://www.menabytes.com/the-modist-shuts-down/'],['Glossy – closes its doors','https://www.glossy.co/fashion/luxury-fashion-retailer-the-modist-closes-its-doors/']]},
+
+{id:'nisnass',name:'Nisnass',country:'UAE',city:'Dubai',sector:'Fashion',founded:2018,died:2020,raised:0,cause:'Parent pulled plug',status:'Dead',
+ summary:'Al Tayer Group\'s youth-focused online fashion platform, a corporate venture launched in 2018. Al Tayer confirmed in June 2020 it would close, consolidating around Ounass.',
+ autopsy:['Corporate venture without an independent P&L defence: first casualty of a parent\'s 2020 cost review.','Overlapped with sibling brand Ounass; cannibalised rather than extended.'],
+ lesson:'A corporate-backed startup dies when the parent\'s CFO has a bad quarter, regardless of your traction.',
+ rebuild:'Spin corporate ventures out with external co-investors from day one so the parent can\'t unilaterally switch it off.',
+ sources:[['Gulf Business – Nisnass closing down','https://gulfbusiness.com/en/2020/uae/uae-e-commerce-platform-awok-shuts-shop']]},
+
+{id:'mizado',name:'Mizado',country:'UAE',city:'Dubai',sector:'E-commerce',founded:2012,died:2012,raised:0,cause:'Parent pulled plug',status:'Dead',
+ summary:'Rocket Internet\'s Dubai "Amazon clone" for electronics. Shut after roughly five months in 2012 as Rocket refocused on Egypt and North Africa; ~150 staff reportedly let go.',
+ autopsy:['Launched by a global incubator with no local market thesis — closed by a spreadsheet in Berlin.','Five-month lifespan: the shortest in the UAE wing.'],
+ lesson:'Copy-paste models imported by remote operators have no reason to survive a portfolio review.',
+ rebuild:'Not worth rebuilding as a general store. The electronics niche today is refurbished/certified devices with GCC warranty — a trust problem, not a catalogue problem.',
+ sources:[['Gulf News – Mizado shutters website','https://gulfnews.com/uae/uae-online-retailer-shutters-website-1.1067644'],['Wamda – Rocket exits Mizado','https://www.wamda.com/index.php/en/2012/08/rocket-internet-to-exit-turkey-mizado-refocus-on-egypt-and-north-africa']]},
+
+{id:'jadopado',name:'JadoPado',country:'UAE',city:'Dubai',sector:'E-commerce',founded:2010,died:2017,raised:8,cause:'Acqui-shutdown',status:'Acqui-shut',
+ summary:'Beloved Dubai marketplace plus "hotcake" seller platform; raised ~$8M (BECO Capital). Acquired May 2017 by a Mohamed Alabbar-led fund for Noon and shut down immediately ("our grand experiment is at an end after 2420 days"). Founder Omar Kassim became Noon CTO and resigned within three weeks.',
+ autopsy:['Sold into the Amazon–Souq panic; the buyer wanted talent and one fewer competitor.','Product switched off on acquisition — customers and sellers got nothing.','Founder-buyer culture mismatch surfaced in under a month.'],
+ lesson:'An acqui-hire is an exit for the cap table and a funeral for the product. Decide which you\'re selling before you sign.',
+ rebuild:'Seller-tools layer ("hotcake") as a standalone SaaS for GCC merchants selling across Noon, Amazon.ae and Instagram — sticky, independent of any one marketplace.',
+ sources:[['Gulf Business – JadoPado acquired','https://mot-backup.gulfbusiness.com/?p=102336'],['MENAbytes – acquisition tracker','https://www.menabytes.com/alabbar-tech-investments-tracker/']]},
+
+{id:'munchon',name:'Munch:On',country:'UAE',city:'Dubai',sector:'Food delivery',founded:2016,died:2022,raised:16,cause:'Acqui-shutdown',status:'Acqui-shut',
+ summary:'Subscription-based discounted lunch delivery for corporates (Wamda Capital portfolio); reported funding between $6M and $16M+. Acquired by Careem in June 2022 for an undisclosed sum; daily operations stopped and the offering was "rebuilt into the Careem app".',
+ autopsy:['Corporate lunch demand collapsed with office attendance in 2020–21.','Subscription discounting depends on restaurant downtime capacity — a thin, contestable edge.','Sold to the super-app that could replicate the feature.'],
+ lesson:'A feature-sized business gets bought at feature-sized prices by whoever owns the distribution.',
+ rebuild:'B2B canteen-as-a-service for UAE free-zone campuses and labour accommodations: contracted volumes, prepaid, not consumer subscriptions.',
+ sources:[['Careem press release','https://blog.careem.com/posts/careem-acquires-munchon-to-expand-food-offering-on-the-super-app-2'],['Wamda','https://www.wamda.com/en/2022/06/careem-acquires-food-delivery-startup-munchon']]},
+
+{id:'swvl',name:'Swvl',country:'UAE',city:'Dubai',sector:'Mobility',founded:2017,died:2023,raised:1500,cause:'Growth at all costs',status:'Zombie',
+ summary:'Bus-hailing unicorn founded in Cairo, HQ moved to Dubai. Listed on Nasdaq via SPAC (March 2022) at a $1.5B valuation; stock fell ~99%, Nasdaq delisting notices, 1-for-25 reverse split, ~50% of staff cut, acquisitions in Europe/LatAm unwound. Still trading, but the company that listed is gone. Figure shown is SPAC valuation, not cash raised.',
+ autopsy:['SPAC closed as $100M of forward-purchase commitments were withdrawn — listed into a closing window.','Four acquisitions in under a year (Shotl, Zeelo, Volt Lines, Urbvan) paid in stock, then reversed.','Core markets\' currencies (EGP, PKR, KES) devalued ~60% against the dollar it reported in.','"115 cities, 18 countries" before unit profitability anywhere.'],
+ lesson:'Public-market capital is not patient capital. Listing a loss-making emerging-market business in USD is a currency short you didn\'t mean to take.',
+ rebuild:'GCC-only B2B transport contracts (schools, corporate shuttles) priced in AED/SAR, with routing software licensed to operators elsewhere instead of operating there.',
+ sources:[['Bloomberg – rise and 99% tumble','https://www.bloomberg.com/news/articles/2023-03-09/swvl-stock-price-fall-another-relic-of-spac-era'],['TechCabal – 2022 financials','https://techcabal.com/2023/11/01/swvl-financial-report-2022/'],['Enterprise – behind the turnaround','https://enterpriseam.com/uae/2024/05/20/behind-swvls-turnaround/']]},
+
+{id:'silkhaus',name:'Silkhaus',country:'UAE',city:'Dubai',sector:'Proptech',founded:2021,died:2025,raised:10,cause:'Unit economics',status:'Dead',
+ summary:'Tech-enabled short-term rental operator (pricing software, smart locks, owner portal). Raised a $7.75M seed (Nuwa, Nordstar, GFC, VentureSouq) in 2022, more than $10M in total, then growth money in Jan 2025 for Saudi. Reported in late 2025 to be winding down its UAE holiday-home business — the same year Sonder collapsed globally.',
+ autopsy:['Operator model: fixed rent/revenue-share obligations to landlords, variable occupancy.','Dubai\'s holiday-home supply exploded 2023–25, compressing nightly rates.','Expansion to Saudi funded before UAE operations were self-sustaining.'],
+ lesson:'Software margins don\'t survive contact with a lease. If you guarantee landlord income, you are a hotel with a nicer dashboard.',
+ rebuild:'Pure SaaS for Dubai holiday-home licence-holders (DET compliance, dynamic pricing, guest ID) — charge per unit, hold zero leases.',
+ sources:[['FWDstart – Silkhaus to wind down UAE business (reported)','https://www.fwdstart.me/p/vc-backed-proptech-silkhaus-faces-reported-wind-down-of-uae-short-term-rental-business']]},
+
+/* ---------- GLOBAL (figures approximate, from public reporting) ---------- */
+{id:'quibi',name:'Quibi',country:'USA',city:'Los Angeles',sector:'Media',founded:2018,died:2020,raised:1750,cause:'No market need',status:'Dead',summary:'Mobile-only short-form premium video. Raised $1.75B pre-launch; shut six months after launching in April 2020.',autopsy:['Solved a commute problem the week commutes stopped.','No sharing, no TV casting at launch; Hollywood economics on a phone.'],lesson:'Capital can\'t buy demand that doesn\'t exist.',rebuild:'Creator-first micro-drama with vertical video and social sharing — which is exactly what ReelShort and TikTok did.',sources:[]},
+{id:'theranos',name:'Theranos',country:'USA',city:'Palo Alto',sector:'Healthtech',founded:2003,died:2018,raised:700,cause:'Fraud / no product',status:'Dead',summary:'Blood-testing company whose device never worked as claimed. Dissolved 2018; founder convicted of fraud.',autopsy:['Secrecy as a substitute for peer review.','Board of statesmen, zero scientists.'],lesson:'Regulated science needs reproducible results, not a story.',rebuild:'Partner-lab micro-sampling with published validation — the honest version is a real market.',sources:[]},
+{id:'fast',name:'Fast',country:'USA',city:'San Francisco',sector:'Fintech',founded:2019,died:2022,raised:124,cause:'Growth at all costs',status:'Dead',summary:'One-click checkout. Raised $124M (Stripe-led), reportedly ~$600K revenue in 2021 against a huge burn. Shut April 2022.',autopsy:['Burn ~10x revenue, hiring ahead of merchants.','Stripe and Shopify shipped the same feature.'],lesson:'A feature a platform can add is not a company.',rebuild:'Checkout for the long tail of regional payment methods platforms ignore.',sources:[]},
+{id:'airlift',name:'Airlift',country:'Pakistan',city:'Lahore',sector:'Quick commerce',founded:2019,died:2022,raised:109,cause:'Failed to raise',status:'Dead',summary:'Pakistan\'s most-funded startup pivoted from bus-hailing to 30-minute grocery; raised $85M Series B at $275M valuation, then failed to close the next round. Shut July 2022.',autopsy:['Dark-store capex in a 2022 funding freeze.','Pivot into a lower-margin business at the top of the market.'],lesson:'Quick commerce is a capital-markets business; when the market closes, so do you.',rebuild:'Franchise dark stores to existing kiryana shops; software and supply only.',sources:[['CB Insights','https://www.cbinsights.com/research/biggest-startup-failures/']]},
+{id:'olive',name:'Olive AI',country:'USA',city:'Columbus',sector:'Healthtech',founded:2012,died:2023,raised:902,cause:'No market need',status:'Dead',summary:'Hospital admin automation valued at $4B; reports said its "AI" leaned on manual labour. Sold assets and shut Oct 2023.',autopsy:['Product sprawl across dozens of hospital workflows.','Human-in-the-loop costs scaled with revenue.'],lesson:'If margins don\'t improve with volume, it isn\'t software.',rebuild:'Narrow: prior-authorisation only, with measurable denial-rate reduction.',sources:[['Killed by AI','https://killedbyai.net/funding/']]},
+{id:'forward',name:'Forward (CarePods)',country:'USA',city:'San Francisco',sector:'Healthtech',founded:2016,died:2024,raised:657,cause:'No market need',status:'Dead',summary:'AI-run primary care culminating in self-serve "CarePod" kiosks; only three ever launched. Shut Nov 2024.',autopsy:['Hardware moonshot layered on a clinic business already losing money.'],lesson:'Patients want a doctor, not a vending machine.',rebuild:'Nurse-led kiosks for a single use case (e.g., hypertension monitoring) inside pharmacies.',sources:[['Killed by AI','https://killedbyai.net/funding/']]},
+{id:'kite',name:'Kite',country:'USA',city:'San Francisco',sector:'Developer tools',founded:2014,died:2022,raised:21,cause:'Too early',status:'Dead',summary:'AI code completion, shut Nov 2022 — months before Copilot and ChatGPT made the category explode.',autopsy:['Developers wouldn\'t pay; models weren\'t good enough yet.'],lesson:'Being right early is indistinguishable from being wrong, financially.',rebuild:'The rebuild shipped: GitHub Copilot, Cursor.',sources:[]},
+{id:'webvan',name:'Webvan',country:'USA',city:'Foster City',sector:'Quick commerce',founded:1996,died:2001,raised:800,cause:'Growth at all costs',status:'Dead',summary:'Dot-com grocery delivery; built $1B of automated warehouses before proving one city. Bankrupt 2001.',autopsy:['26 cities planned, zero profitable.'],lesson:'Prove the unit before you clone the unit.',rebuild:'Instacart did: no warehouses, gig pickers, existing stores.',sources:[]},
+{id:'pets',name:'Pets.com',country:'USA',city:'San Francisco',sector:'E-commerce',founded:1998,died:2000,raised:300,cause:'Unit economics',status:'Dead',summary:'Shipped heavy, low-margin pet food below cost after a Super Bowl ad blitz. Liquidated nine months after IPO.',autopsy:['Negative gross margin on the core product.'],lesson:'You cannot market your way out of selling below cost.',rebuild:'Chewy: same idea, 2011, with autoship and margin discipline.',sources:[]},
+{id:'jawbone',name:'Jawbone',country:'USA',city:'San Francisco',sector:'Hardware',founded:1999,died:2017,raised:930,cause:'Outcompeted',status:'Dead',summary:'Bluetooth speakers and fitness trackers; nearly $1B raised, liquidated 2017 after Fitbit and Apple Watch.',autopsy:['Hardware returns and lawsuits ate the balance sheet.'],lesson:'Consumer hardware against Apple is a war of attrition you fund alone.',rebuild:'Medical-grade wearables for one condition, sold through insurers.',sources:[]},
+{id:'zume',name:'Zume',country:'USA',city:'Mountain View',sector:'Food delivery',founded:2015,died:2023,raised:445,cause:'No market need',status:'Dead',summary:'Robot pizza trucks that baked en route; SoftBank-backed, pivoted to packaging, shut 2023.',autopsy:['Cheese slid off in moving ovens — literally.'],lesson:'Robotics for a problem no customer had.',rebuild:'Compostable packaging alone was the real business.',sources:[]},
+{id:'argo',name:'Argo AI',country:'USA',city:'Pittsburgh',sector:'Autonomy',founded:2016,died:2022,raised:3600,cause:'Too early',status:'Dead',summary:'Ford/VW self-driving JV, ~$3.6B committed; shut Oct 2022 when both backers walked.',autopsy:['Timeline to revenue outlived investor patience.'],lesson:'Two corporate parents means two exit votes.',rebuild:'Driver-assist licensing with revenue today, not robotaxis in 2030.',sources:[]},
+{id:'convoy',name:'Convoy',country:'USA',city:'Seattle',sector:'Logistics',founded:2015,died:2023,raised:1000,cause:'Market collapse',status:'Dead',summary:'Digital freight brokerage valued at $3.8B; shut Oct 2023 amid a freight recession and funding freeze.',autopsy:['Brokerage margins went negative when rates fell.'],lesson:'Marketplaces that take price risk are not asset-light.',rebuild:'Pure software for brokers; never touch the load.',sources:[]},
+{id:'insteon',name:'Insteon',country:'USA',city:'Irvine',sector:'Hardware',founded:2005,died:2022,raised:0,cause:'Cash mismanagement',status:'Dead',summary:'Smart-home platform that switched its cloud servers off overnight in April 2022 with no notice to customers.',autopsy:['Cloud-dependent devices with no local fallback.'],lesson:'If your hardware dies when your company does, you sold a subscription and called it a product.',rebuild:'Local-first protocols (Matter) — the industry\'s answer.',sources:[['TechCrunch 2022 shutdowns','https://techcrunch.com/?p=2451611']]},
+{id:'anki',name:'Anki',country:'USA',city:'San Francisco',sector:'Hardware',founded:2010,died:2019,raised:200,cause:'Failed to raise',status:'Dead',summary:'Consumer robotics (Cozmo, Vector). ~$200M raised, shut April 2019 when a financing fell through.',autopsy:['Toy price points, R&D budgets of a robotics lab.'],lesson:'Seasonal consumer hardware needs retail margin, not venture margin.',rebuild:'Licensed the IP — Digital Dream Labs revived Vector.',sources:[['Failory','https://www.failory.com/startups/lack-of-funds-failures']]},
+{id:'dunzo',name:'Dunzo',country:'India',city:'Bengaluru',sector:'Quick commerce',founded:2014,died:2025,raised:450,cause:'Outcompeted',status:'Dead',summary:'Hyperlocal delivery backed by Google and Reliance; lost to Blinkit/Zepto/Instamart, shut Jan 2025.',autopsy:['FY23 loss ~8x revenue.'],lesson:'In quick commerce the fourth player funds the first three\'s ad budgets.',rebuild:'B2B last-mile for kiranas rather than consumer delivery.',sources:[['Wikipedia – Dunzo','https://en.wikipedia.org/wiki/Dunzo']]},
+{id:'koo',name:'Koo',country:'India',city:'Bengaluru',sector:'Social',founded:2020,died:2024,raised:50,cause:'Failed to raise',status:'Dead',summary:'Indian-language Twitter alternative, $50M+ raised; shut July 2024 after acquisition talks collapsed.',autopsy:['Network effects never crossed the threshold.'],lesson:'Social networks are binary: default or dead.',rebuild:'Vernacular creator tooling layered on existing networks.',sources:[['CEOVine','https://www.ceovine.com/2024-startup-shutdowns']]},
+{id:'sonder',name:'Sonder',country:'USA',city:'San Francisco',sector:'Proptech',founded:2014,died:2025,raised:1000,cause:'Unit economics',status:'Dead',summary:'Tech-enabled apartment-hotel operator, SPAC\'d 2022; Marriott terminated its licence and it filed Chapter 7 in Nov 2025.',autopsy:['Long leases, short bookings.'],lesson:'Same disease as Silkhaus, bigger body.',rebuild:'Franchise the brand and software to building owners; hold no leases.',sources:[['FWDstart','https://www.fwdstart.me/p/vc-backed-proptech-silkhaus-faces-reported-wind-down-of-uae-short-term-rental-business']]},
+{id:'juicero',name:'Juicero',country:'USA',city:'San Francisco',sector:'Hardware',founded:2013,died:2017,raised:120,cause:'No market need',status:'Dead',summary:'$400 Wi-Fi juice press; journalists squeezed the packs by hand. Shut Sept 2017.',autopsy:['Hardware that solved nothing.'],lesson:'If a human hand is a competitor, reconsider.',rebuild:'Fresh-juice subscription without the press.',sources:[]},
+{id:'beepi',name:'Beepi',country:'USA',city:'Los Altos',sector:'Marketplace',founded:2013,died:2017,raised:150,cause:'Cash mismanagement',status:'Dead',summary:'Used-car marketplace; reports of lavish spending and $7M/month burn. Collapsed Feb 2017.',autopsy:['Burn disconnected from transactions.'],lesson:'Culture of spend precedes the crash by about a year.',rebuild:'Carvana-style with owned inspection and financing margin.',sources:[]},
+{id:'homejoy',name:'Homejoy',country:'USA',city:'San Francisco',sector:'Marketplace',founded:2012,died:2015,raised:40,cause:'Regulatory / tax exposure',status:'Dead',summary:'On-demand home cleaning; shut July 2015 citing worker-classification lawsuits and poor retention.',autopsy:['Discount-acquired customers never came back.'],lesson:'Labour law is a cost of goods.',rebuild:'Employ the cleaners; sell recurring contracts.',sources:[]},
+{id:'essential',name:'Essential',country:'USA',city:'Palo Alto',sector:'Hardware',founded:2015,died:2020,raised:330,cause:'Outcompeted',status:'Dead',summary:'Andy Rubin\'s premium Android phone; sold ~150K units. Shut Feb 2020.',autopsy:['Entered a duopoly with one SKU.'],lesson:'Founder fame is not distribution.',rebuild:'Software (ambient OS) licensed to OEMs rather than a phone.',sources:[]}
+];
+
+/* ---------- MORE CORPSES (global; funding approximate from public reporting, v:false) ---------- */
+function m(id,name,country,city,sector,type,founded,died,raised,cause,status,summary,autopsy,lesson,rebuild){return{id,name,country,city,sector,type,founded,died,raised,cause,status,summary,autopsy:[autopsy],lesson,rebuild,sources:[],v:false}}
+const MORE=[
+/* India */
+m('zilingo','Zilingo','Singapore','Singapore','Fashion','Marketplace (B2B)',2015,2022,310,'Cash mismanagement','Dead','B2B fashion supply-chain platform valued near $1B; CEO suspended in 2022 over accounting irregularities, then liquidated.','Financial controls lagged years behind the valuation.','Governance is a product feature when you raise at unicorn prices.','Fashion supply-chain SaaS with audited escrow payments between factories and brands.'),
+m('tinyowl','TinyOwl','India','Mumbai','Food delivery','Mobile App',2014,2016,27,'Growth at all costs','Dead','Food-ordering app that expanded to six cities, then laid off staff in waves (employees locked executives in an office) and merged into Roadrunnr.','Scaled cities before unit economics in one.','Expansion is a cost, not a KPI.','Single-city restaurant ordering with delivery outsourced.'),
+m('peppertap','PepperTap','India','Gurgaon','Quick commerce','Mobile App',2014,2016,51,'Unit economics','Dead','Hyperlocal grocery delivery backed by Sequoia; shut grocery in 2016 after burning on discounts and store-pickup inefficiency.','Picking from partner stores was slow and unprofitable.','If the picking model loses money per order, marketing accelerates death.','Franchise dark-store software for kiranas.'),
+m('stayzilla','Stayzilla','India','Chennai','Travel','Marketplace',2005,2017,33,'Unit economics','Dead','Homestay marketplace that halted operations in 2017; founder briefly arrested in a vendor dispute.','Cash-burn on supply acquisition in tier-2 towns never converted.','Marketplaces die when both sides are subsidised.','Managed homestays in 5 tourist towns, asset-light.'),
+m('lido','Lido Learning','India','Mumbai','EdTech','SaaS (B2C)',2019,2022,29,'Failed to raise','Dead','Live online tutoring startup that shut in Feb 2022 after a funding round fell through; staff and parents unpaid.','Post-COVID demand collapse plus a failed round.','Pandemic demand is a loan, not a trend.','Hybrid tutoring centres with online homework support.'),
+m('zestmoney','ZestMoney','India','Bengaluru','Fintech','Financial & Fintech',2015,2023,130,'Regulatory / tax exposure','Dead','BNPL lender valued ~$450M; wound down after RBI digital-lending rules and a failed PhonePe acquisition.','Regulation removed the product, acquirer walked.','Regulated credit is a licence business first.','Lending-as-a-service for NBFCs with a banking partner from day one.'),
+m('gomechanic','GoMechanic','India','Gurgaon','Automotive','Marketplace',2016,2023,60,'Fraud / no product','Acqui-shut','Car-servicing marketplace; founders admitted "grave errors" in financial reporting in Jan 2023, laid off 70%, sold in distress.','Inflated revenue to raise.','One falsified number ends the company and the founders.','Garage management SaaS with honest numbers.'),
+m('frontrow','FrontRow','India','Bengaluru','EdTech','Mobile App',2020,2023,17,'No market need','Dead','Celebrity-taught hobby courses (Lightspeed, Elevation); shut 2023 after low repeat usage.','Users bought once and left.','Entertainment is not education; neither retains without a reason to return.','Creator-led cohort classes with outcomes.'),
+m('doodhwala','Doodhwala','India','Bengaluru','Quick commerce','Mobile App',2015,2019,4,'Failed to raise','Dead','Milk-subscription delivery; shut 2019 when a bridge round failed.','Thin margins on milk, high delivery cost.','Subscription only works when the basket is bigger than the delivery.','Multi-SKU morning basket subscription.'),
+/* China / HK */
+m('ofo','ofo','China','Beijing','Mobility','Hardware',2014,2019,2200,'Growth at all costs','Zombie','Dockless bike-sharing unicorn; 15M+ users still queued for deposit refunds as it collapsed in 2018–19.','Dumped millions of bikes into cities with no revenue model beyond deposits.','A deposit is a liability, not revenue.','City-contracted bike fleets paid per ride by municipalities.'),
+m('bluegogo','Bluegogo','China','Tianjin','Mobility','Hardware',2016,2017,90,'Cash mismanagement','Dead','Third-largest Chinese bike-sharing player; collapsed in Nov 2017 with employee salaries and deposits unpaid.','Spent on fleet faster than rides could pay.','Capex-led growth with no fare discipline.','Operator software for licensed fleet owners.'),
+m('byton','Byton','China','Nanjing','Automotive','Vehicle',2016,2021,1100,'Failed to raise','Dead','EV startup with a 48-inch dashboard; halted operations in 2020–21 after burning ~$1B without mass production.','Spent on showrooms and tech demos before a factory.','A car company that never ships a car is a design studio with a burn problem.','Software/UX licensed to existing OEMs.'),
+m('ezubao','Ezubao','China','Beijing','Fintech','Financial & Fintech',2014,2016,7600,'Fraud / no product','Dead','P2P lending platform exposed as a Ponzi scheme in 2016; ~900,000 investors lost $7.6B.','95% of projects were fake.','When returns are guaranteed, verify who is paying them.','Regulated P2P with escrow and public loan books — which China later mandated.'),
+m('gobee','Gobee.bike','Hong Kong','Hong Kong','Mobility','Mobile App',2017,2018,9,'Unit economics','Dead','Bike-sharing startup that quit Europe in 2018 after mass vandalism and theft of its fleet.','Bikes destroyed faster than they earned.','Your asset is only as durable as the public is kind.','Docked/geofenced fleets under city contracts.'),
+/* SEA */
+m('honestbee','honestbee','Singapore','Singapore','Quick commerce','Mobile App',2015,2019,46,'Cash mismanagement','Dead','Grocery delivery and "habitat" cashierless supermarket; suspended operations across markets in 2019, entered judicial management.','Flagship store and 8-country expansion funded by debt to suppliers.','Experiential retail is a vanity capex.','Grocery delivery software for supermarkets.'),
+m('fabelio','Fabelio','Indonesia','Jakarta','E-commerce','D2C',2015,2022,19,'Failed to raise','Dead','Online furniture retailer declared bankrupt in 2022 after unpaid wages and a failed raise.','Inventory-heavy furniture with slow turns.','Big-ticket D2C needs working capital, not venture capital.','Made-to-order furniture marketplace with deposits.'),
+m('zenius','Zenius','Indonesia','Jakarta','EdTech','SaaS (B2C)',2004,2024,40,'Failed to raise','Dead','20-year-old edtech that suspended operations in Jan 2024 citing operational challenges.','Post-pandemic edtech funding winter.','Legacy does not protect you from a cash cycle.','B2B school licensing.'),
+m('pegipegi','Pegipegi','Indonesia','Jakarta','Travel','Marketplace',2012,2023,0,'Outcompeted','Dead','Online travel agency that closed in Dec 2023 after losing to Traveloka and Tiket.','Third in a two-player market.','Travel OTAs are a scale game.','Niche: domestic bus and ferry ticketing.'),
+m('jdid','JD.ID','Indonesia','Jakarta','E-commerce','Marketplace',2015,2023,0,'Parent pulled plug','Dead','JD.com\'s Indonesian arm shut in March 2023 as the parent retreated from Southeast Asia.','Parent exited the region.','Subsidiaries die by memo.','Logistics-only JV with local retailer.'),
+m('wefit','WeFit','Vietnam','Hanoi','Health & fitness','Mobile App',2016,2020,1,'Unit economics','Dead','"ClassPass of Vietnam"; filed for bankruptcy in May 2020 after unlimited-class plans were abused.','Unlimited plans at fixed price vs. per-class gym costs.','Unlimited is a pricing bug.','Credits-based plans with per-visit payouts.'),
+m('propzy','Propzy','Vietnam','Ho Chi Minh City','Proptech','Marketplace',2016,2022,37,'Failed to raise','Dead','Offline-to-online property platform (SoftBank Ventures Asia) that shut in 2022 after layoffs.','Heavy offline centres, thin commissions.','Brokerage with venture overheads.','Agent CRM SaaS.'),
+/* Pakistan / Turkey / MENA */
+m('vavacars','VavaCars','Turkey','Istanbul','Automotive','Marketplace',2019,2023,50,'Unit economics','Dead','Vitol-backed used-car platform in Turkey and Pakistan; shut in 2023.','Owned-inventory car trading in two high-inflation currencies.','Inventory in a depreciating currency is a double short.','Inspection and financing layer only.'),
+m('jugnu','Jugnu','Pakistan','Lahore','E-commerce','Marketplace (B2B)',2019,2023,23,'Failed to raise','Dead','B2B retail-supply platform that wound down its core business in 2023.','Funding winter plus macro crisis in Pakistan.','B2B commerce needs cheap working capital; venture money is the expensive kind.','Embedded credit for distributors, not a marketplace.'),
+m('getir','Getir','Turkey','Istanbul','Quick commerce','Mobile App',2015,2024,1800,'Growth at all costs','Zombie','Quick-commerce pioneer valued at $12B; exited the US, UK and Europe in 2024 to survive in Turkey.','Bought Gorillas and expanded to 5 countries at the peak.','The fastest-growing company in a bubble is the most exposed when it pops.','Turkey-only, profitable, licence the model.'),
+m('capiter','Capiter','Egypt','Cairo','E-commerce','Marketplace (B2B)',2020,2022,33,'Cash mismanagement','Dead','B2B marketplace that collapsed in 2022 after founders were removed amid investor disputes over finances.','Governance breakdown within two years of a $33M round.','Board disputes are public within weeks in a small ecosystem.','FMCG distribution software for existing wholesalers.'),
+m('tradehub','TradeHub','Egypt','Cairo','E-commerce','Marketplace (B2B)',2024,2025,1,'No market need','Dead','B2B startup that shut in Sept 2025 and returned remaining capital after failing to find product-market fit.','Honest shutdown — rare.','Returning capital is a win condition too.','n/a'),
+m('markavip','MarkaVIP','Jordan','Amman','Fashion','D2C',2010,2017,20,'Acqui-shut','Acqui-shut','Luxury flash-sales pioneer across the GCC (Dubai office; Fetchr was spun out of its logistics team); faded and was quietly acquired by JollyChic in 2017.','Flash-sale model lost to full-price marketplaces.','Flash sales train customers to wait.','Luxury resale platform.'),
+/* Africa */
+m('54gene','54gene','Nigeria','Lagos','Healthtech','Biotech',2019,2023,45,'Cash mismanagement','Dead','African genomics startup that shut in 2023 after three CEOs in a year and funding dried up.','Burn on labs and expansion outran grant and VC money.','Science infrastructure needs patient capital.','Contract genomics lab serving pharma.'),
+m('sendy','Sendy','Kenya','Nairobi','Logistics','Mobile App',2015,2023,26,'Failed to raise','Dead','Logistics platform that pivoted from trucks to fulfilment and shut in 2023 after a failed sale.','Two pivots, no profitable core.','Pivoting with venture debt is a race against the clock.','Fleet software for existing truck owners.'),
+m('copia','Copia','Kenya','Nairobi','E-commerce','Marketplace',2013,2024,123,'Unit economics','Dead','Rural e-commerce via agent network; entered administration in 2024 after burning $123M.','Low-ticket orders to remote agents never covered delivery.','Rural commerce is a logistics subsidy without density.','Agent-network software licensed to FMCG brands.'),
+m('kune','Kune Food','Kenya','Nairobi','Food delivery','D2C',2020,2022,1,'No market need','Dead','Ready-meal startup that shut 11 months after raising $1M pre-seed; "the market was not ready".','Priced above local lunch alternatives.','You cannot out-market a cheaper, better-loved kiosk.','Corporate canteen contracts.'),
+m('dash','Dash','Ghana','Accra','Fintech','Financial & Fintech',2019,2023,86,'Fraud / no product','Dead','Cross-border payments app that shut in 2023 amid reports of misreported user numbers and CEO departure.','Metrics inflated to raise $32M Series A.','Fake users are a time bomb with an audit fuse.','Interoperable wallet rails for banks.'),
+m('lazerpay','Lazerpay','Nigeria','Lagos','Fintech','Financial & Fintech',2021,2023,1,'Failed to raise','Dead','Crypto payments startup that shut in April 2023 after a lead investor pulled out.','Dependent on one lead investor in a crypto winter.','One term sheet is zero term sheets.','Stablecoin settlement for freelancers via a licensed partner.'),
+/* UK / Europe */
+m('cazoo','Cazoo','UK','London','Automotive','Marketplace',2018,2024,2000,'Growth at all costs','Dead','Online used-car retailer SPAC\'d at $7B; entered administration in 2024.','Owned inventory, TV ads and European expansion in a rate-hike year.','Buying cars with venture money is the most expensive way to lose money.','Marketplace with dealer inventory and own inspection.'),
+m('babylon','Babylon Health','UK','London','Healthtech','SaaS (B2C)',2013,2023,1200,'Unit economics','Dead','AI triage and telehealth company valued at $4B; collapsed into insolvency in 2023 after US value-based-care contracts lost money.','Took on US risk contracts to grow revenue, lost on every patient.','Revenue bought with medical risk is a loss in disguise.','Triage software licensed to health systems.'),
+m('arrival','Arrival','UK','London','Automotive','Vehicle',2015,2024,1300,'Failed to raise','Dead','Electric van maker SPAC\'d at $13B; entered administration in 2024 having delivered almost no vehicles.','Microfactory concept unproven at scale.','Novel manufacturing plus novel product is two bets on one balance sheet.','Retrofit electrification of existing vans.'),
+m('britishvolt','Britishvolt','UK','Blyth','Energy','Hardware',2019,2023,200,'Failed to raise','Dead','Gigafactory startup that collapsed in Jan 2023 before building its plant.','No customers, no cells, a site and a promise.','Infrastructure needs offtake agreements before ground-breaking.','Battery-pack assembly for existing cell makers.'),
+m('bulb','Bulb Energy','UK','London','Energy','Subscription',2015,2021,0,'Market collapse','Dead','UK energy supplier with 1.7M customers; collapsed in 2021 when wholesale gas prices spiked and it was unhedged.','Sold fixed prices, bought spot.','Unhedged exposure is a bet you didn\'t mean to make.','Hedged supplier or a pure switching/software layer.'),
+m('gorillas','Gorillas','Germany','Berlin','Quick commerce','Mobile App',2020,2022,1300,'Growth at all costs','Acqui-shut','10-minute grocery delivery that raised $1.3B in two years and sold to Getir in 2022 for a fraction.','Dark stores in 60 cities before one was profitable.','Speed is a feature customers won\'t pay for twice.','Dark-store SaaS for supermarkets.'),
+m('lilium','Lilium','Germany','Munich','Aerospace','Vehicle',2015,2025,1500,'Failed to raise','Dead','eVTOL air-taxi maker that filed for insolvency twice (2024, 2025) after certification costs outran cash.','A decade to certify, two years of runway.','Certification timelines are the real burn rate.','Component supplier to certified OEMs.'),
+m('volocopter','Volocopter','Germany','Bruchsal','Aerospace','Vehicle',2011,2025,600,'Failed to raise','Acqui-shut','eVTOL pioneer that entered insolvency in Dec 2024 and was acquired by a Chinese buyer in 2025.','Same disease as Lilium.','When two peers die the same way, the category has a timing problem.','Drone logistics with existing certification.'),
+m('sono','Sono Motors','Germany','Munich','Automotive','Vehicle',2016,2023,0,'Failed to raise','Zombie','Solar-car maker that cancelled its Sion car in 2023 and pivoted to solar panels for buses.','Crowdfunded reservations could not fund a factory.','Pre-orders are demand signal, not a production budget.','Solar integration kits — its own pivot.'),
+m('nuri','Nuri (Bitwala)','Germany','Berlin','Fintech','Financial & Fintech',2015,2022,0,'Market collapse','Dead','Crypto bank that filed for insolvency in 2022 after the Celsius collapse froze customer yield products.','Counterparty risk passed through to retail.','Yield you don\'t generate is risk you don\'t see.','Custody-only with a regulated partner.'),
+m('luko','Luko','France','Paris','Fintech','Financial & Fintech',2016,2023,70,'Failed to raise','Acqui-shut','Insurtech that entered receivership in 2023 and was bought by Allianz Direct.','Loss ratios plus a closed funding window.','Insurance is a balance-sheet business.','MGA on top of a carrier, no risk retained.'),
+m('ynsect','Ynsect','France','Paris','Agritech','Hardware',2011,2025,600,'Unit economics','Dead','Insect-protein producer that raised ~$600M and entered receivership in 2025.','Factory costs far above protein market prices.','Deep-tech capex must beat commodity prices, not just taste good.','Smaller modular farms for premium pet food.'),
+m('lightyear','Lightyear','Netherlands','Helmond','Automotive','Vehicle',2016,2023,250,'Failed to raise','Zombie','Solar-car startup whose operating company went bankrupt in Jan 2023 weeks after starting production.','$250K car, 150 orders.','Luxury-priced prototypes do not fund mass-market dreams.','Solar roof tech licensed to OEMs — its relaunch.'),
+m('northvolt','Northvolt','Sweden','Stockholm','Energy','Hardware',2016,2025,15000,'Growth at all costs','Dead','Europe\'s battery champion, $15B raised; filed for bankruptcy in Sweden in March 2025 after production shortfalls.','Built four sites at once; the first never hit yield.','Yield before scale, or scale becomes the thing that kills you.','Single-site cell maker with a Tier-1 partner.'),
+/* Americas */
+m('wework','WeWork','USA','New York','Proptech','Subscription',2010,2023,22000,'Growth at all costs','Zombie','Co-working giant valued at $47B; filed Chapter 11 in Nov 2023, emerged smaller.','Long leases, short memberships, founder spending.','Same disease as Silkhaus and Sonder, largest body.','Management contracts with landlords, no leases.'),
+m('ftx','FTX','USA','Nassau','Fintech','Financial & Fintech',2019,2022,1800,'Fraud / no product','Dead','Crypto exchange that collapsed in Nov 2022; customer funds were used by its sister trading firm.','No board, no CFO, no controls.','Trust in a custodian is only as good as its audit.','Segregated-custody exchange under a real regulator.'),
+m('bird','Bird','USA','Miami','Mobility','Hardware',2017,2023,900,'Unit economics','Zombie','Scooter-sharing pioneer that filed Chapter 11 in Dec 2023.','Scooters lasted months; city fees rose.','Hardware that dies in 4 months cannot be rented profitably.','City-contracted fleets with 3-year hardware.'),
+m('moviepass','MoviePass','USA','New York','Media','Subscription',2011,2019,100,'Unit economics','Dead','$9.95/month unlimited cinema subscription that paid full price per ticket; shut 2019.','Lost money on every active user by design.','Unlimited at a loss is customer acquisition with no second act.','Studio-funded discount nights.'),
+m('yikyak','Yik Yak','USA','Atlanta','Social','Mobile App',2013,2017,73,'No market need','Dead','Anonymous campus app valued at $400M; shut 2017 after harassment problems and user flight.','Anonymity drove growth, then abuse, then exit.','Growth from a feature that also kills retention is a trap.','Campus community with verified identity.'),
+m('katerra','Katerra','USA','Menlo Park','Construction','Hardware',2015,2021,2000,'Growth at all costs','Dead','SoftBank-backed construction-tech firm that filed for bankruptcy in 2021 after $2B+.','Vertical integration of an entire industry at once.','You cannot buy an industry\'s learning curve.','Factory-built modules for one building type.'),
+m('fisker','Fisker','USA','Manhattan Beach','Automotive','Vehicle',2016,2024,1300,'Cash mismanagement','Dead','EV maker (Ocean SUV) that filed Chapter 11 in June 2024 after quality and delivery failures.','Outsourced manufacturing, in-house chaos.','Contract manufacturing does not outsource execution risk.','Software-defined fleet vehicles with a Tier-1 maker.'),
+m('nikola','Nikola','USA','Phoenix','Automotive','Vehicle',2014,2025,3000,'Fraud / no product','Dead','Hydrogen-truck maker whose founder was convicted of fraud; filed for bankruptcy in Feb 2025.','A truck rolled downhill in a demo video.','A demo is a promise you must be able to keep.','Hydrogen refuelling infrastructure only.'),
+m('irl','IRL','USA','San Francisco','Social','Mobile App',2018,2023,200,'Fraud / no product','Dead','Social app valued at $1.17B; shut 2023 after the board found 95% of its 20M users were fake.','Bots inflated the only metric that mattered.','Audit your DAU before your investors do.','n/a'),
+m('veev','Veev','USA','San Mateo','Construction','Hardware',2008,2023,600,'Unit economics','Dead','Prefab home-builder valued at $1B; shut Nov 2023 as housing demand and funding fell.','Factory costs above site-built homes.','Prefab must beat the incumbent on cost, not just speed.','Panelised walls sold to builders.'),
+m('vine','Vine','USA','New York','Media','Mobile App',2012,2016,0,'Parent pulled plug','Dead','Six-second video app acquired by Twitter pre-launch; shut in 2016 as creators left for Instagram.','Parent didn\'t monetise it; creators followed the money.','Platforms die when the creators do.','TikTok did.'),
+m('stadia','Google Stadia','USA','Mountain View','Gaming','Subscription',2019,2023,0,'Parent pulled plug','Dead','Cloud-gaming service shut in Jan 2023 with full refunds; Google cited lack of traction.','Few exclusives; distrust of Google\'s staying power.','Platform credibility is a product requirement.','Cloud-gaming infrastructure licensed to publishers.'),
+m('vroom','Vroom','USA','New York','Automotive','Marketplace',2013,2024,1000,'Unit economics','Zombie','Online used-car retailer that shut its e-commerce business in Jan 2024 to focus on its lending arm.','Same economics as Cazoo.','When three peers die the same way, read the autopsy before launching.','Financing and inspection only.'),
+m('elementai','Element AI','Canada','Montreal','AI','SaaS (B2B)',2016,2020,257,'No market need','Acqui-shut','AI research darling that sold to ServiceNow for ~$230M, below money raised, after failing to productise.','Research talent, no repeatable product.','A lab is not a company until something ships twice.','Vertical AI product for one industry.'),
+m('merqueo','Merqueo','Colombia','Bogotá','Quick commerce','Mobile App',2017,2023,80,'Unit economics','Dead','Online supermarket in Colombia and Mexico; filed for bankruptcy in 2023.','Dark stores plus low basket sizes.','Latin American grocery has the same arithmetic as everywhere else.','Supermarket delivery software.'),
+m('urbvan','Urbvan','Mexico','Mexico City','Mobility','Mobile App',2016,2023,10,'Acqui-shut','Acqui-shut','Van-pooling startup bought by Swvl for $82M in stock and sold back for $12M a year later.','Acquired at the peak with paper, dumped in the crash.','Stock-funded acquisitions reverse when the stock does.','B2B employee transport contracts.'),
+m('milkrun','Milkrun','Australia','Sydney','Quick commerce','Mobile App',2021,2023,86,'Unit economics','Acqui-shut','10-minute grocery delivery that shut in April 2023 sixteen months after launch; brand later bought by Woolworths.','Lost money per order in a market with two supermarket giants.','Incumbents can buy your brand for less than your Series A.','Dark-store ops for the incumbent — which is what happened.'),
+m('metigy','Metigy','Australia','Sydney','Marketing','SaaS (B2B)',2015,2022,20,'Fraud / no product','Dead','Marketing-AI startup that collapsed in 2022 after its CEO was found to have falsified revenue to fund property purchases.','Fake revenue, real mortgages.','Controls are a founder\'s best protection against themselves.','n/a'),
+m('tmon','Tmon','South Korea','Seoul','E-commerce','Marketplace',2010,2024,0,'Cash mismanagement','Dead','Pioneering Korean e-commerce platform (Qoo10 group) that failed to pay sellers and filed for rehabilitation in 2024.','Seller payments used to fund the parent\'s acquisitions.','Seller float is not your capital.','Escrowed marketplace payments by law — now mandated.'),
+m('wemakeprice','WeMakePrice','South Korea','Seoul','E-commerce','Marketplace',2010,2024,0,'Cash mismanagement','Dead','Tmon\'s sister platform, collapsed in the same 2024 payment crisis.','Same parent, same float problem.','Group risk is your risk.','As above.'),
+m('kaso','Kaso','UAE','Dubai','Food delivery','Marketplace (B2B)',2021,2024,10,'Unit economics','Dead','Restaurant-supply ordering platform that raised ~$10.5M in 2022 and reportedly wound down in 2024. (UAE; less documented than the main wing — treat as approximate.)','Low take-rate B2B ordering with heavy sales cost.','B2B marketplaces need financing margin, not just ordering.','Embedded supplier credit for restaurants.')
+];
+MORE.forEach(c=>D.push(c));
+/* product types for the original 33 */
+const TYPES={awok:'Marketplace',fetchr:'Logistics platform',wadi:'Marketplace',sprii:'Marketplace',modist:'D2C',nisnass:'D2C',mizado:'Marketplace',jadopado:'Marketplace',munchon:'Subscription',swvl:'Mobile App',silkhaus:'Managed operator',quibi:'Subscription',theranos:'Medical',fast:'Financial & Fintech',airlift:'Mobile App',olive:'SaaS (B2B)',forward:'Medical',kite:'SaaS (B2B)',webvan:'Marketplace',pets:'D2C',jawbone:'Consumer Electronics',zume:'Robotics',argo:'Vehicle',convoy:'Marketplace (B2B)',insteon:'Consumer Electronics',anki:'Consumer Electronics',dunzo:'Mobile App',koo:'Mobile App',sonder:'Managed operator',juicero:'Consumer Electronics',beepi:'Marketplace',homejoy:'Marketplace',essential:'Consumer Electronics'};
+D.forEach(c=>{if(!c.type)c.type=TYPES[c.id]||'Other';if(c.v===undefined)c.v=c.sources.length>0});
+
+const ANTI = [
+ {n:'01',t:'Raise ≠ Revenue',d:'Treating the round as the milestone. Burn rises to meet the cash; the business model is never forced to work.',ex:'Awok · Fast · Beepi'},
+ {n:'02',t:'Blitz before Proof',d:'Expanding to new cities or countries (usually Saudi) before a single market is profitable.',ex:'Swvl · Webvan · Sprii · Silkhaus'},
+ {n:'03',t:'Negative Unit Economics',d:'Each order, night or shipment loses money and "scale will fix it". Scale makes it worse.',ex:'Pets.com · Awok · Sonder'},
+ {n:'04',t:'Regulatory Debt',d:'Licences, tax structures or labour rules handled with a workaround that later becomes a bill.',ex:'Fetchr · Homejoy'},
+ {n:'05',t:'Feature, not Company',d:'The product is something a platform can add in a quarter — and does.',ex:'Fast · Munch:On · JadoPado'},
+ {n:'06',t:'Borrowed Oxygen',d:'Dependence on one parent, one customer or one investor who can switch you off.',ex:'Nisnass · Mizado · Argo AI · Wadi'},
+ {n:'07',t:'Trend as Moat',d:'Pioneering a category whose incumbents can copy it as soon as it proves out.',ex:'The Modist · Kite · Quibi'}
+];
+
+const QUIZ = [
+ ['Do you describe your last funding round as your biggest achievement so far?',0],
+ ['Are you planning a Saudi (or any second-country) launch before your first market is profitable?',1],
+ ['If you subtract delivery, returns and acquisition cost from one order, is the number negative or unknown?',2],
+ ['Do you operate under a partner\'s licence, or pay taxes "through" someone else, in any market?',3],
+ ['Could Careem, Noon, Amazon or Talabat ship your core feature in one quarter?',4],
+ ['Does one customer, parent company or investor account for more than 40% of your revenue or runway?',5],
+ ['Is your main advantage being first to a trend rather than owning assets, data or brands competitors lack?',6]
+];
+
+/* ===================== HELPERS ===================== */
+const $=s=>document.querySelector(s);
+const fmtA=c=>(c.v===false&&c.raised?'~':'')+fmt$(c.raised);
+const fmt$=m=>m>=1000?`$${(m/1000).toFixed(1).replace(/\.0$/,'')}B`:m>0?`$${m}M`:'undisclosed';
+const life=c=>Math.max(0.4,c.died-c.founded);
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=[...Array(n+1).keys()];for(let i=1;i<=m;i++){let c=[i];for(let j=1;j<=n;j++){c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1))}p=c}return p[n]}
+function fuzzy(hay,q){hay=hay.toLowerCase();return q.toLowerCase().split(/\s+/).filter(Boolean).every(tok=>{if(hay.includes(tok))return true;if(tok.length<4)return false;return hay.split(/[^a-z0-9]+/).some(w=>w.length>=3&&lev(w,tok)<=(tok.length>6?2:1))})}
+const median=a=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y),m=s.length>>1;return s.length%2?s[m]:(s[m-1]+s[m])/2};
+const mode=a=>{const c={};a.forEach(x=>c[x]=(c[x]||0)+1);return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'};
+
+/* ===================== ARCS, TAXONOMY, FEATURED ===================== */
+const ARCS={awok:'From AED-1 bargains and 10M monthly visitors to unpaid couriers in 16 months after a $30M Series A',fetchr:'From a $300M valuation to founders diluted to zero, then a $100M tax bill',wadi:'From a $67M war chest against Souq to a grocery pivot and a quiet absorption by MAF',sprii:'From "everything for mums" in five countries to liquidation with vendors unpaid',modist:'From pioneering modest luxury to being copied by Net-a-Porter and closing in a week',nisnass:'From Al Tayer\'s youth bet to a line item in a 2020 cost review',mizado:'From Rocket Internet clone to closed in five months',jadopado:'From Dubai\'s favourite marketplace to switched off by its acquirer in 2,420 days',munchon:'From millions of corporate lunches to a feature inside Careem',swvl:'From a $1.5B SPAC to a 99% stock collapse and half the staff gone',silkhaus:'From smart-lock holiday homes to a reported wind-down as Dubai supply exploded',kaso:'From $10.5M for restaurant supply to a quiet 2024 wind-down',
+quibi:'From $1.75B raised to shut six months after launch',theranos:'From a $9B valuation to a fraud conviction',fast:'From $124M and Stripe\'s blessing to ~$600K revenue and the end',airlift:'From Pakistan\'s richest round to a failed raise in a year',olive:'From a $4B "AI" to humans behind the curtain',forward:'From $657M to three kiosks',kite:'From AI code completion to shutting months before Copilot',webvan:'From $1B of warehouses to zero profitable cities',pets:'From a Super Bowl ad to liquidation in nine months',jawbone:'From $900M and a fitness-tracker lead to liquidation',zume:'From robot pizza trucks to packaging',argo:'From $3.6B of Ford and VW money to a two-vote shutdown',convoy:'From a $3.8B valuation to a freight recession',insteon:'From smart homes to servers switched off overnight',anki:'From the cutest robot on Earth to a financing that fell through',dunzo:'From Google\'s first Indian bet to losing the 10-minute war',koo:'From India\'s Twitter to a failed sale',sonder:'From a SPAC to Chapter 7 after Marriott walked',juicero:'From a $400 press to hands squeezing the pack',beepi:'From $150M to $7M-a-month burn and collapse',homejoy:'From on-demand cleaning to worker-classification lawsuits',essential:'From Android\'s creator to 150K phones sold',
+ofo:'From 15M bikes to 15M refund requests',ezubao:'From guaranteed returns to a $7.6B Ponzi',getir:'From a $12B valuation to retreating to Turkey',gorillas:'From $1.3B in two years to a fire sale',northvolt:'From Europe\'s battery champion and $15B to bankruptcy on yield',wework:'From $47B to Chapter 11',ftx:'From the face of crypto to customer funds gone',cazoo:'From a $7B SPAC to administration',babylon:'From a $4B AI doctor to insolvency on US risk contracts',arrival:'From a $13B SPAC to almost no vans delivered',nikola:'From a truck rolling downhill to a founder in prison',bird:'From the fastest unicorn ever to Chapter 11',moviepass:'From 3M subscribers to bankruptcy in under 24 months',katerra:'From $2B to rebuild construction to bankruptcy',zilingo:'From near-unicorn to CEO suspended and liquidated',honestbee:'From eight countries and a cashierless store to judicial management',tmon:'From Korea\'s e-commerce pioneer to sellers unpaid',milkrun:'From 10-minute groceries to a brand sold to the supermarket it fought',copia:'From $123M for rural e-commerce to administration',irl:'From a $1.17B valuation to 95% fake users'};
+D.forEach(c=>{c.arc=ARCS[c.id]||`From ${c.raised?fmt$(c.raised)+' raised':'launch'} to ${c.status==='Zombie'?'a zombie':c.status==='Acqui-shut'?'acquired and switched off':'dead'} in ${life(c).toFixed(0)} year${life(c)>=1.5?'s':''}`});
+
+/* collapse the 14 causes into 9 standard categories (detail kept) */
+const TAX={'Cash mismanagement':'Ran out of cash','Failed to raise':'Ran out of cash','Unit economics':'Flawed business model','Growth at all costs':'Scaling too fast','Regulatory / tax exposure':'Legal or regulatory issues','Fraud / no product':'Legal or regulatory issues','No market need':'No product-market fit','Too early':'Timing or market conditions','Market collapse':'Timing or market conditions','Outcompeted':'Timing or market conditions','Acqui-shutdown':'Acquired or shut by owner','Acqui-shut':'Acquired or shut by owner','Parent pulled plug':'Acquired or shut by owner'};
+D.forEach(c=>{c.detail=c.cause;c.cause=TAX[c.cause]||c.cause;if(/Technology|device never worked|didn't work/i.test(c.summary)&&c.id==='theranos')c.cause='Technology failure'});
+
+/* featured long-form autopsies */
+const FEATURED=[
+{id:'awok',cat:'E-commerce · UAE',title:'Awok: the $30 million that bought sixteen months',sub:'How Dubai\'s loudest bargain store went from 10 million visitors a month to unpaid couriers — during the biggest e-commerce boom in the region\'s history.',min:5,body:[
+'Ulugbek Yuldashev started Awok in 2013 with $30,000 of his own savings and three employees. The pitch was unfashionable and effective: sell cheap things to people the glossy marketplaces ignored. Kitchenware, phone cases, AED-1 novelties, mid-range appliances — 70,000 products, later 300,000, with Awok\'s own fulfilment centre and delivery fleet. By 2019 it claimed more than 10 million monthly visitors and 700 staff, and had expanded into Saudi Arabia.',
+'In April 2019 it raised its first outside money: a $30 million Series A co-led by StonePine ACE Partners and Al-Faisaliah Ventures, with Endeavor Catalyst participating — one of the largest e-commerce rounds the region had seen. The stated plan was Saudi expansion, a private label, and talent. The press called it a milestone. In hindsight it was a stopwatch.',
+'What the announcement did not say, and what Wamda later reported, was that Awok\'s supplier and logistics debt already exceeded AED 60 million, some of it dating from December 2018 — before the round closed. A courier was owed AED 800,000 on its own. The money did not fix the model; it funded more of it. Each low-ticket order carried acquisition cost, delivery, and a high return rate, and the arithmetic per order was plausibly negative. Volume made it worse.',
+'By early 2020, employees told MENAbytes, the company was in crisis. Orders were still being accepted and paid for through the gateway, but fulfilment and refunds had stalled; staff were working from personal email accounts. The end was announced on Reddit by a Dubai resident before Awok posted a statement citing "the current global situation". That phrase is the most common epitaph in the UAE wing, and the least informative: in Q2 2020, regional e-commerce revenue grew 71% year on year. The market was not the problem.',
+'The lesson is not that Awok should have raised less. It is that a round is a liability with a growth clause: the money comes with an expectation of speed, and speed applied to a negative-margin order book shortens the runway rather than extending it. A margin gate — no SKU goes live unless price minus cost, delivery and expected returns is positive — would have made Awok smaller and slower. It would also have made it alive.'],
+sources:[['MENAbytes – Awok shuts down','https://www.menabytes.com/awok-shuts-down/'],['Wamda – pandemic victim or cash mismanagement?','https://www.wamda.com/en/2020/09/awok-failure-pandemic-victim-cash-mismanagement'],['Gulf Business','https://gulfbusiness.com/en/2020/uae/uae-e-commerce-platform-awok-shuts-shop']]},
+{id:'fetchr',cat:'Logistics · UAE',title:'Fetchr: the startup that died twice',sub:'A $300 million valuation, a bail-out that wiped out the founders, and a $100 million tax bill from a licence workaround nobody had booked.',min:6,body:[
+'Fetchr was born inside another company. Idriss Al Rifai had run logistics at MarkaVIP, the region\'s first big flash-sale site, and in 2012 he and Joy Ajlouny turned the problem into a startup: in cities without reliable street addresses, let the customer\'s phone be the address. Couriers navigated to a GPS pin. It was a clever answer to a real regional problem, and investors agreed — $11 million from New Enterprise Associates in 2015, then a $41 million Series B in 2017 with Majid Al Futtaim, at a valuation close to $300 million. For a while it was among the best-funded startups in the region, behind only Careem, Souq and Wadi.',
+'By the account of Momentum Works, an analyst firm with former Fetchr staff among its contributors, the Series B went into warehouses and vehicles ahead of demand, and then two things happened: JollyChic, the Chinese cross-border retailer that had become Fetchr\'s largest customer, grew dissatisfied and built its own logistics in 2018; and during White Friday 2018 Fetchr\'s call centre collapsed under volume, leaving sellers and shoppers furious in public. Throughout 2018 the company sought a Series C and could not close one.',
+'In late 2019 Fetchr wrote to investors that its financial performance had been "rapidly diminishing" and that it was considering a sale or bankruptcy. It was rescued with $10 million in emergency financing that, by Bloomberg\'s account, diluted existing shareholders to almost nothing. The founders were out. A turnaround team cut roughly 1,230 jobs, exited Jordan, Bahrain and Oman, and raised a further $15 million in 2020 to focus on Saudi Arabia.',
+'The second death came from the first life. When Fetchr entered Saudi Arabia in 2015, only a handful of licensed logistics firms could clear and deliver there, so — again per the Momentum Works account — it operated under a local partner\'s licence and paid its taxes through that partner, without receipts it could later produce. In 2021 the Saudi tax authority assessed roughly $100 million in VAT and Zakat. BECO Capital, a major backer, told its own investors the company was insolvent and that liquidation was "on the table". The structure that had let Fetchr grow fast in 2015 had been an unbooked liability all along.',
+'Two lessons. First, capex-led growth in logistics only works if the customer that fills the warehouse stays; Fetchr lost its anchor within a year of building for it. Second, and more specific to the Gulf: regulatory structure is a balance-sheet item. A licence workaround is debt you have not recorded yet, and the bill tends to arrive at the moment you can least pay it.'],
+sources:[['Gulf News / Bloomberg – narrowly averts collapse','https://gulfnews.com/technology/companies/dubai-based-fetchr-narrowly-averts-collapse-1.68247559'],['Wamda – at risk of liquidation','https://www.wamda.com/en/2021/10/fetchr-risk-liquidation'],['KrASIA – $15M after cutting 1,200 jobs','https://kr-asia.com/fetchr-secures-usd-15-million-in-fresh-funds-after-cutting-over-1200-jobs-report'],['Momentum Works via Baijing (Chinese) – inside account','https://www.baijing.cn/article/35970']]},
+{id:'swvl',cat:'Mobility · UAE',title:'Swvl: listing into a closing window',sub:'The Middle East\'s first Nasdaq SPAC went from a $1.5 billion valuation to a 99% stock collapse in a year. The company survived. The company that listed did not.',min:6,body:[
+'Swvl started in Cairo in 2017 as a bus-hailing app: fixed routes, booked seats, a fraction of the price of a taxi, in cities where public transport was unreliable. It worked, and it worked in hard places — Egypt, Kenya, Pakistan. The company moved its headquarters to Dubai, and in 2021 agreed to go public on Nasdaq by merging with Queen\'s Gambit Growth Capital, a SPAC, at a $1.5 billion valuation. It was the first company founded in Africa and the second from the Middle East to take that route.',
+'Between mid-2021 and April 2022 Swvl announced at least four acquisitions — Shotl in Barcelona, Zeelo in the UK, Urbvan in Mexico and a Turkish shuttle operator — paid largely in stock. By its own description it operated in 115 cities across 18 countries. The listing closed in March 2022, just as $100 million of forward-purchase commitments were withdrawn and the SPAC market turned; the stock began at $10 and spent most of the following year below $1. Nasdaq sent delisting notices. A 1-for-25 reverse split followed.',
+'Two forces squeezed it at once. Rates rose and growth capital vanished, so the funding the SPAC was supposed to deliver never fully arrived. And Swvl\'s revenue was earned in Egyptian pounds, Pakistani rupees and Kenyan shillings while it reported, and had promised, in dollars; its CEO later said the average currency basket of its markets devalued by about 60%. The company cut roughly half its workforce, sold or shut the businesses it had just bought — Urbvan, acquired for $82 million in stock, went back for $12 million — and retreated to a few markets.',
+'Swvl is still listed, which is why this site tags it a zombie rather than a corpse. But the entity that listed — a global transit platform with a continental footprint — no longer exists. Its founder\'s own account is unusually frank: the acquisitions were paid in paper, the paper collapsed, and employees who had never thought about the share price watched their options go to zero.',
+'The lesson for Gulf founders is specific. Public-market capital is not patient capital, and a SPAC does not change that. And listing a loss-making emerging-market business in dollars is a currency short you did not mean to take. The rebuild on this site is deliberately boring: GCC-only B2B transport contracts priced in dirhams and riyals, with the routing software licensed elsewhere rather than operated there.'],
+sources:[['Bloomberg – spectacular rise and 99% tumble','https://www.bloomberg.com/news/articles/2023-03-09/swvl-stock-price-fall-another-relic-of-spac-era'],['TechCrunch – all eyes on Swvl','https://techcrunch.com/2022/03/31/all-eyes-are-on-swvl-as-it-starts-trading-on-a-spac-combination'],['Enterprise – behind Swvl\'s turnaround','https://enterpriseam.com/uae/2024/05/20/behind-swvls-turnaround/']]}
+];
+function renderFeatured(){
+  $('#featGrid').innerHTML=FEATURED.map((f,i)=>`<a class="feat" href="#featured" onclick="openFeature(${i})" style="min-height:0"><div class="k" style="color:var(--amber)">${esc(f.cat)} · ${f.min} min read</div><h3 style="font-size:16px;text-transform:none;letter-spacing:0;margin-top:6px">${esc(f.title)}</h3><p>${esc(f.sub)}</p></a>`).join('');
+}
+function openFeature(i){
+  const f=FEATURED[i],c=D.find(x=>x.id===f.id);
+  $('#featBody').innerHTML=`<div class="k" style="color:var(--amber)">${esc(f.cat)} · ${f.min} min read · by the Graveyard Keeper</div><h1 style="font-size:clamp(24px,3.5vw,38px);line-height:1.2;margin:12px 0 8px">${esc(f.title)}</h1><p style="font-size:17px;color:var(--muted);margin:0 0 24px">${esc(f.sub)}</p><div class="lesson" style="margin-bottom:24px"><b>The arc:</b> ${esc(c.arc)}</div>${f.body.map(p=>`<p style="font-size:16px;line-height:1.8;max-width:720px">${esc(p)}</p>`).join('')}<div class="tools" style="display:flex;gap:8px;flex-wrap:wrap;margin:24px 0"><button class="btn p" onclick="openCorpse('${c.id}')">Open the autopsy record →</button><a class="btn" href="#rebuilds">Rebuild plan</a></div><h4 class="pix" style="font-size:10px;color:var(--acid)">▸ SOURCES</h4><div class="src">${f.sources.map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])} ↗</a>`).join('')}</div><div style="margin-top:30px;border-top:1px solid var(--line);padding-top:16px" class="k">More featured autopsies</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">${FEATURED.map((g,j)=>j===i?'':`<button class="chip" onclick="openFeature(${j})">${esc(g.title.split(':')[0])}</button>`).join('')}</div>`;
+  location.hash='featured';window.scrollTo(0,0);
+}
+
+/* rails: recently buried + most looted */
+function looted(id){myLoot[id]=(myLoot[id]||0)+1;try{localStorage.setItem('graveyard_loot',JSON.stringify(myLoot))}catch{}pushLoot();renderRails()}
+function renderRails(){
+  const recent=[...D].sort((a,b)=>b.died-a.died||b.raised-a.raised).slice(0,6);
+  const m={};Object.entries(LOOT_SHARED).forEach(([k,v])=>m[k]=v);if(!SDB)Object.entries(myLoot).forEach(([k,v])=>m[k]=(m[k]||0)+v);
+  const top=[...D].sort((a,b)=>(m[b.id]||0)-(m[a.id]||0)||b.raised-a.raised).slice(0,6);
+  const li=c=>`<li style="cursor:pointer" onclick="openCorpse('${c.id}')"><b>${c.country==='UAE'?'🇦🇪 ':''}${esc(c.name)}</b> <em>${c.died} · ${fmtA(c)}</em><div style="color:var(--muted);font-size:12px">${esc(c.arc)}</div></li>`;
+  $('#rails').innerHTML=`<div class="t10"><h3>⚰️ Recently buried</h3><ol>${recent.map(li).join('')}</ol></div><div class="t10"><h3>🏴‍☠️ Most looted</h3><ol>${top.map(li).join('')}</ol><div class="k" style="margin-top:8px">${Object.keys(m).length?(SDB?'Based on autopsies opened by everyone with access':'Based on autopsies opened in this browser'):'Opens are counted; until then, sorted by capital'}</div></div>`;
+}
+
+/* student submissions → real cards */
+function loadSubs(){let s=[];try{s=JSON.parse(localStorage.getItem('graveyard_subs')||'[]')}catch{}return s}
+function addSubToD(x){if(D.find(c=>c.id===x.id))return;const c={...x,autopsy:x.autopsy||['Submitted case — evidence pending review.'],sources:x.source?[['Submitted source',x.source]]:[],v:false,mp:'Medium',build:'Medium',stack:'TBD',type:x.type||'Other',submitted:true};c.detail=c.cause;c.arc=`From ${c.raised?fmt$(c.raised)+' raised':'launch'} to dead in ${Math.max(1,c.died-c.founded)} years`;D.push(c)}
+loadSubs().forEach(addSubToD);
+function submitCase(e){
+  e.preventDefault();const f=new FormData(e.target);
+  const name=f.get('name').trim();if(!name)return;
+  const id='sub-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+Date.now().toString(36);
+  const x={id,name,country:f.get('country').trim()||'Unknown',city:f.get('city').trim()||'—',sector:f.get('sector').trim()||'Other',type:f.get('ptype').trim()||'Other',founded:+f.get('founded')||new Date().getFullYear()-2,died:+f.get('died')||new Date().getFullYear(),raised:+f.get('raised')||0,cause:f.get('cause'),status:'Dead',summary:f.get('summary').trim(),autopsy:f.get('evidence').trim().split('\n').filter(Boolean),lesson:f.get('lesson').trim()||'—',rebuild:f.get('rebuild').trim()||'—',source:f.get('source').trim(),by:f.get('by').trim()||'Anonymous student'};
+  const s=loadSubs();s.push(x);try{localStorage.setItem('graveyard_subs',JSON.stringify(s))}catch{}
+  addSubToD(x);refreshAll();
+  $('#subOk').classList.add('show');$('#subOk').innerHTML=`Buried. <b>${esc(name)}</b> is now a card in the graveyard. Saving…`;
+  pushSubs().then(ok=>{$('#subOk').innerHTML=ok?`Buried. <b>${esc(name)}</b> is now a card in the graveyard and shared with everyone who has access to this page.`:`Buried. <b>${esc(name)}</b> is a card in this browser. Shared storage is not available here (viewer-only access or signed out) — use Export to hand it to your teacher.`});
+  e.target.reset();
+}
+function exportSubs(){const t=JSON.stringify(loadSubs(),null,1);$('#subExport').value=t;$('#subExport').style.display='block';try{navigator.clipboard.writeText(t)}catch{}}
+function importSubs(){try{const arr=JSON.parse($('#subExport').value);if(!Array.isArray(arr))throw 0;const s=loadSubs();arr.forEach(x=>{if(!s.find(y=>y.id===x.id))s.push(x)});localStorage.setItem('graveyard_subs',JSON.stringify(s));s.forEach(addSubToD);refreshAll();pushSubs();$('#subOk').classList.add('show');$('#subOk').textContent=`Imported. ${s.length} submitted cases loaded.`}catch{$('#subOk').classList.add('show');$('#subOk').textContent='Could not read that JSON.'}}
+
+
+/* ===================== SHARED STORE (class-wide, via artifact db) ===================== */
+let SDB=null,SUSER=null,SUID=null,LOOT_SHARED={},CW_BOARD=[];
+let myLoot={};try{myLoot=JSON.parse(localStorage.getItem('graveyard_loot')||'{}')}catch{}
+function setShareStatus(mode){const el=$('#shareStatus');if(!el)return;el.textContent=mode==='shared'?'● Shared class storage: ON — submissions, loot counts and quiz scores sync for everyone with access':mode==='pending'?'○ Connecting to shared storage…':'○ Shared storage unavailable here — saving to this browser only';el.style.color=mode==='shared'?'var(--acid)':'var(--muted)'}
+function refreshAll(){renderStatic();initCountrySel();render();renderRails();renderPages();initDVOptions();renderDV()}
+function myCases(){return loadSubs()}
+let lootTimer=null;
+function pushLoot(){if(!SDB||!SUID)return;clearTimeout(lootTimer);lootTimer=setTimeout(()=>{SDB.doc('loot/'+SUID).set({counts:myLoot,at:Date.now()}).catch(()=>{})},1500)}
+async function pushSubs(){if(!SDB||!SUID)return false;try{await SDB.doc('subs/'+SUID).set({cases:myCases(),at:Date.now()});return true}catch(e){return false}}
+async function pushCW(){if(!SDB||!SUID)return;let sc={n:0,ok:0};try{sc=JSON.parse(localStorage.getItem('graveyard_cw')||'{"n":0,"ok":0}')}catch{}try{await SDB.doc('cw/'+SUID).set({n:sc.n,ok:sc.ok,at:Date.now()})}catch{}}
+async function initShared(){
+  setShareStatus('pending');
+  if(!window.claude||typeof claude.use!=='function'){setShareStatus('local');return}
+  let db=null,user=null;
+  try{[db,user]=await Promise.all([claude.use('db'),claude.use('user')])}catch{}
+  if(!db){setShareStatus('local');return}
+  SDB=db;SUSER=user;try{SUID=user?await user.id():null}catch{SUID=null}
+  let timer=setTimeout(()=>setShareStatus('local'),10000);
+  try{
+    db.collection('subs').onSnapshot(snap=>{clearTimeout(timer);let changed=false;snap.docs.forEach(d=>{const b=d.data();if(!b||!Array.isArray(b.cases))return;b.cases.forEach(x=>{if(x&&x.id&&x.name&&!D.find(c=>c.id===x.id)){addSubToD({...x,uid:d.id});changed=true}})});if(changed)refreshAll();setShareStatus('shared')},e=>{clearTimeout(timer);setShareStatus('local')});
+    db.collection('loot').onSnapshot(snap=>{const agg={};snap.docs.forEach(d=>{const b=d.data()||{};Object.entries(b.counts||{}).forEach(([k,v])=>agg[k]=(agg[k]||0)+(+v||0))});LOOT_SHARED=agg;renderRails()},()=>{});
+    db.collection('cw').onSnapshot(async snap=>{const rows=snap.docs.map(d=>({id:d.id,...(d.data()||{})})).filter(r=>r.n>0);let names={};try{if(SUSER)names=await SUSER.profiles(rows.map(r=>r.id))}catch{}CW_BOARD=rows.map(r=>({...r,name:(names[r.id]&&names[r.id].name)||'Someone'})).sort((a,b)=>b.ok-a.ok||a.n-b.n).slice(0,10);renderBoard()},()=>{});
+  }catch{setShareStatus('local')}
+  // push anything I already have locally
+  if(SUID){if(myCases().length)pushSubs();if(Object.keys(myLoot).length)pushLoot();pushCW()}
+}
+function renderBoard(){const el=$('#cwBoard');if(!el)return;if(!CW_BOARD.length){el.innerHTML='';return}el.innerHTML=`<div class="k" style="margin:16px 0 6px">Class leaderboard · correct diagnoses</div><ol style="margin:0;padding-left:20px;font-size:13px">${CW_BOARD.map(r=>`<li><b>${esc(r.name)}</b> <span style="color:var(--muted)">${r.ok}/${r.n}${r.id===SUID?' · you':''}</span></li>`).join('')}</ol>`}
+
+/* ===================== STATE ===================== */
+let state={sort:'newest',region:'all',sector:null,country:'',q:''};
+
+function filtered(){
+  let r=D.filter(c=>state.region==='all'||(state.region==='UAE'?c.country==='UAE':c.country!=='UAE'));
+  if(state.sector)r=r.filter(c=>c.sector===state.sector);
+  if(state.country)r=r.filter(c=>c.country===state.country);
+  if(state.q)r=r.filter(c=>fuzzy([c.name,c.city,c.country,c.sector,c.cause,c.summary,c.status].join(' '),state.q));
+  if(state.sort==='newest')r.sort((a,b)=>b.died-a.died||b.raised-a.raised);
+  if(state.sort==='burned')r.sort((a,b)=>b.raised-a.raised);
+  if(state.sort==='died')r.sort((a,b)=>life(a)-life(b));
+  return r;
+}
+
+/* ===================== RENDER ===================== */
+function renderStatic(){
+  const uae=D.filter(c=>c.country==='UAE');
+  $('#liveCount').textContent=D.length;$('#liveUae').textContent=uae.length;
+  $('#featUae').textContent=uae.length+' CASES';$('#featRebuild').textContent=D.length+' PLANS';
+  $('#ticker').innerHTML=[`OVER ${D.length} DEAD STARTUPS`,`${uae.length} BURIED IN THE UAE`,`${fmt$(D.reduce((s,c)=>s+c.raised,0))} OF CAPITAL BURNED`,`TOP KILLER: ${mode(D.map(c=>c.cause)).toUpperCase()}`,`NEW CORPSES ADDED WHEN THE NEWS BREAKS`].map(s=>`<span>☠ ${s}</span>`).join('').repeat(2);
+
+  const burn=uae.reduce((s,c)=>s+c.raised,0), ec=uae.filter(c=>c.sector==='E-commerce'||c.sector==='Fashion').length;
+  $('#uaeStats').innerHTML=[['Documented cases',uae.length],['Disclosed capital',fmt$(burn)+'*'],['Median lifespan',median(uae.map(life)).toFixed(1)+' yrs'],['E-commerce / fashion',ec+' of '+uae.length],['Peak death year',mode(uae.map(c=>c.died))],['Expanded to KSA first',uae.filter(c=>/Saudi|KSA/.test(c.summary+c.autopsy.join())).length+' of '+uae.length]]
+    .map(([k,v])=>`<div><div class="k">${k}</div><b>${v}</b></div>`).join('')+`<div style="grid-column:1/-1;background:transparent;padding:6px 0 0;font-size:11px;color:var(--dim)">*includes Swvl's $1.5B SPAC valuation; disclosed funding alone is ${fmt$(burn-1500)}.</div>`;
+
+  $('#uaeTimeline').innerHTML=[...uae].sort((a,b)=>a.died-b.died).map(c=>`<div class="tl ${c.status==='Zombie'?'z':c.status==='Acqui-shut'?'a':''}"><div class="yr">${c.died}</div><h4>${esc(c.name)} <span class="sub" style="color:var(--muted);font-size:12px">· ${esc(c.sector)} · ${fmt$(c.raised)}</span></h4><p>${esc(c.cause)} — ${esc(c.summary.split('. ').slice(-1)[0])}</p><button onclick="openCorpse('${c.id}')">Read autopsy →</button></div>`).join('');
+
+  $('#anti').innerHTML=ANTI.map(a=>`<div class="ap"><div class="n">${a.n}</div><h3>${a.t}</h3><p>${a.d}</p><div class="ex"><span>Buried here:</span> ${a.ex}</div></div>`).join('');
+
+  $('#quiz').innerHTML=QUIZ.map((q,i)=>`<div class="q"><p>${q[0]}</p><div class="seg" data-i="${i}"><button data-v="1">Yes</button><button data-v="0">No</button></div></div>`).join('')+`<div class="result" id="qres"></div>`;
+  $('#quiz').addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b)return;const seg=b.parentElement;[...seg.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');seg.dataset.v=b.dataset.v;scoreQuiz()});
+
+  const sectors=[...new Set(D.map(c=>c.sector))].sort();
+  $('#sectorChips').innerHTML=`<button class="chip on" data-sector="">All sectors</button>`+sectors.map(s=>`<button class="chip" data-sector="${esc(s)}">${esc(s)}</button>`).join('');
+}
+
+function scoreQuiz(){
+  const segs=[...document.querySelectorAll('#quiz .seg')];const answered=segs.filter(s=>s.dataset.v!==undefined);
+  if(answered.length<QUIZ.length)return;
+  const yes=segs.map((s,i)=>s.dataset.v==='1'?i:-1).filter(i=>i>=0);
+  const r=$('#qres');r.classList.add('show');
+  const pct=Math.round(yes.length/QUIZ.length*100);
+  const verdict=yes.length===0?'IMMORTAL (FOR NOW)':yes.length<=2?'MILD SYMPTOMS':yes.length<=4?'PRE-MORTEM RECOMMENDED':'RESERVE YOUR PLOT';
+  r.innerHTML=`<b class="pix" style="color:${yes.length<=2?'var(--acid)':yes.length<=4?'var(--amber)':'var(--red)'}">${verdict} — ${yes.length}/${QUIZ.length}</b><div class="bar"><i style="width:${pct}%"></i></div>`+(yes.length?`<div class="k" style="margin:10px 0 6px">Your active antipatterns</div><ul style="margin:0;padding-left:18px">${yes.map(i=>`<li><b>${ANTI[QUIZ[i][1]].t}</b> — killed ${ANTI[QUIZ[i][1]].ex}</li>`).join('')}</ul>`:`<p style="margin:0;color:var(--muted)">Either you're disciplined or you're not being honest. Re-take it after your next board meeting.</p>`);
+}
+
+function render(){
+  const r=filtered();
+  const n=r.length, burn=r.reduce((s,c)=>s+c.raised,0), big=[...r].sort((a,b)=>b.raised-a.raised)[0];
+  $('#stats').innerHTML=[['Results',n,''],['Capital burned',fmt$(burn),'red'],['Avg lifespan',n?(r.reduce((s,c)=>s+life(c),0)/n).toFixed(1)+' yrs':'—','amb'],['Top cause',mode(r.map(c=>c.cause)),'acid'],['Countries',new Set(r.map(c=>c.country)).size,''],['Biggest burn',big?`${big.name} ${fmt$(big.raised)}`:'—','red']]
+    .map(([k,v,cl])=>`<div class="stat"><div class="k">${k}</div><b class="${cl}">${v}</b></div>`).join('');
+  $('#empty').style.display=n?'none':'block';
+  $('#grid').innerHTML=r.map(c=>`<article class="card ${c.country==='UAE'?'uae':''}" onclick="openCorpse('${c.id}')" tabindex="0" onkeydown="if(event.key==='Enter')openCorpse('${c.id}')">
+    <div class="top"><div><h3>${c.country==='UAE'?'🇦🇪 ':''}${esc(c.name)}</h3><div class="sub">${esc(c.city)}, ${esc(c.country)} · ${esc(c.sector)}</div></div><span class="badge ${c.status==='Dead'?'dead':c.status==='Zombie'?'zombie':'acq'}">${c.status}</span></div>
+    <p style="color:var(--text);font-style:italic;-webkit-line-clamp:2">${esc(c.arc)}</p>
+    <p>${esc(c.summary)}</p>
+    <div class="cause">☠ ${esc(c.cause)}${c.detail&&c.detail!==c.cause?` <span style="color:var(--dim)">· ${esc(c.detail)}</span>`:''}${c.submitted?` <span class="badge" style="margin-left:6px">Submitted by ${esc(c.by||'student')}</span>`:''}</div>
+    <div class="meta"><div><div class="k">Raised</div><b>${fmtA(c)}</b></div><div><div class="k">Lived</div><b>${c.founded}–${c.died}</b></div><div><div class="k">Lifespan</div><b>${life(c).toFixed(1)} yrs</b></div></div>
+  </article>`).join('');
+  renderCharts(r);
+  renderLists();
+}
+
+function openCorpse(id){
+  const c=D.find(x=>x.id===id);if(!c)return;looted(id);
+  $('#sheet').innerHTML=`<button class="x" onclick="closeModal()" aria-label="Close">×</button>
+   <div class="k">${c.country==='UAE'?'🇦🇪 UAE wing · ':''}Autopsy report · ${esc(c.status)}</div>
+   <h2>${esc(c.name)}</h2><div class="sub">${esc(c.city)}, ${esc(c.country)} · ${esc(c.sector)} · ${c.founded}–${c.died}</div>
+   <div class="kv"><div><div class="k">Raised</div><b>${fmtA(c)}${c.v===false&&c.raised?' <span style="font-size:10px;color:var(--dim)">approx.</span>':''}</b></div><div><div class="k">Lifespan</div><b>${life(c).toFixed(1)} yrs</b></div><div><div class="k">Cause of death</div><b style="color:var(--amber)">${esc(c.cause)}</b>${c.detail&&c.detail!==c.cause?`<div style="font-size:11px;color:var(--muted)">${esc(c.detail)}</div>`:''}</div><div><div class="k">Burn / year</div><b>${c.raised?fmt$(+(c.raised/life(c)).toFixed(1)):'—'}</b></div></div>
+   <p style="margin:0 0 12px;font-size:15px;font-style:italic;color:var(--amber)">${esc(c.arc)}</p>
+   <p style="margin:0;font-size:15px">${esc(c.summary)}</p>${c.submitted?`<div class="k" style="margin-top:10px">Student submission by ${esc(c.by)} — unreviewed</div>`:''}
+   <h4>▸ WHAT KILLED IT</h4><ul>${c.autopsy.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>
+   <h4>▸ THE LESSON</h4><div class="lesson">${esc(c.lesson)}</div>
+   <h4>▸ REBUILD PLAN</h4><div class="rebuild"><div class="k">What we'd build instead</div>${esc(c.rebuild)}</div>
+   ${c.sources.length?`<h4>▸ SOURCES</h4><div class="src">${c.sources.map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])} ↗</a>`).join('')}</div>`:`<h4>▸ SOURCES</h4><div class="src" style="color:var(--dim);font-size:12px">Widely reported; figures approximate. Verify before citing.</div>`}`;
+  $('#modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeModal(){$('#modal').classList.remove('open');document.body.style.overflow=''}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ===================== CHARTS (hand SVG) ===================== */
+const tip=$('#tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.display='block';tip.style.left=Math.min(e.clientX+12,innerWidth-280)+'px';tip.style.top=(e.clientY+12)+'px'}
+function hideTip(){tip.style.display='none'}
+
+function renderCharts(r){
+  // burn zone
+  const W=1100,H=360,L=70,R=20,T=20,B=44;
+  const pts=r.filter(c=>c.raised>0);
+  const maxL=Math.max(8,...r.map(life)),minY=Math.log10(5),maxY=Math.log10(4000);
+  const x=v=>L+(v/maxL)*(W-L-R), y=v=>T+(1-(Math.log10(Math.max(v,5))-minY)/(maxY-minY))*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">`;
+  [10,100,1000].forEach(v=>{s+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#242a32"/><text x="${L-8}" y="${y(v)+4}" fill="#8b939f" font-size="11" text-anchor="end">${fmt$(v)}</text>`});
+  for(let i=0;i<=maxL;i+=2)s+=`<text x="${x(i)}" y="${H-14}" fill="#8b939f" font-size="11" text-anchor="middle">${i}y</text>`;
+  s+=`<rect x="${L}" y="${T}" width="${(x(3)-L)}" height="${H-T-B}" fill="rgba(255,90,90,.05)"/><text x="${L+8}" y="${T+14}" fill="#ff5a5a" font-size="10">BURN ZONE: &lt;3 YRS</text>`;
+  pts.forEach(c=>{const u=c.country==='UAE';s+=`<circle class="dot" data-id="${c.id}" cx="${x(life(c))}" cy="${y(c.raised)}" r="${u?7:5}" fill="${u?'#b6ff3b':'#ffb020'}" fill-opacity=".85" stroke="#0a0c0f"/>`});
+  s+='</svg>';
+  $('#burn').innerHTML=s;
+  $('#burn').querySelectorAll('.dot').forEach(d=>{const c=D.find(x=>x.id===d.dataset.id);d.onmousemove=e=>showTip(e,`<b>${esc(c.name)}</b><br>${fmt$(c.raised)} · ${life(c).toFixed(1)} yrs<br><span style="color:var(--amber)">${esc(c.cause)}</span>`);d.onmouseleave=hideTip;d.onclick=()=>openCorpse(c.id)});
+
+  // causes
+  const cc={};r.forEach(c=>cc[c.cause]=(cc[c.cause]||0)+1);
+  const ce=Object.entries(cc).sort((a,b)=>b[1]-a[1]);const mx=Math.max(1,...ce.map(e=>e[1]));
+  $('#causes').innerHTML=ce.map(([k,v])=>`<div style="display:grid;grid-template-columns:150px 1fr 30px;gap:8px;align-items:center;margin:6px 0;font-size:12px"><span style="color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(k)}</span><div style="height:12px;background:var(--line)"><div style="height:100%;width:${v/mx*100}%;background:var(--amber)"></div></div><b>${v}</b></div>`).join('')||'<div class="k">no data</div>';
+
+  // survival
+  const ls=r.map(life);const N=ls.length||1;const maxA=Math.ceil(Math.max(5,...ls));
+  const w2=480,h2=200,l2=36,b2=26;const sx=a=>l2+a/maxA*(w2-l2-10),sy=p=>8+(1-p)*(h2-b2-8);
+  let d='',prev=1;d=`M${sx(0)},${sy(1)}`;
+  for(let a=0;a<=maxA;a+=0.5){const alive=ls.filter(v=>v>a).length/N;d+=` H${sx(a)} V${sy(alive)}`;prev=alive}
+  d+=` H${sx(maxA)} V${sy(0)}`;
+  let sv=`<svg viewBox="0 0 ${w2} ${h2}" width="100%">`;
+  [0,.25,.5,.75,1].forEach(p=>sv+=`<line x1="${l2}" x2="${w2-10}" y1="${sy(p)}" y2="${sy(p)}" stroke="#242a32"/><text x="${l2-6}" y="${sy(p)+4}" fill="#8b939f" font-size="10" text-anchor="end">${p*100}%</text>`);
+  for(let a=0;a<=maxA;a+=Math.ceil(maxA/8))sv+=`<text x="${sx(a)}" y="${h2-8}" fill="#8b939f" font-size="10" text-anchor="middle">${a}y</text>`;
+  sv+=`<path d="${d}" fill="none" stroke="#b6ff3b" stroke-width="2"/>`;
+  const med=median(ls);sv+=`<line x1="${sx(med)}" x2="${sx(med)}" y1="8" y2="${h2-b2}" stroke="#ff5a5a" stroke-dasharray="4 4"/><text x="${sx(med)+4}" y="20" fill="#ff5a5a" font-size="10">median ${med.toFixed(1)}y</text></svg>`;
+  $('#surv').innerHTML=sv;
+
+  // sectors
+  const sc={};r.forEach(c=>sc[c.sector]=(sc[c.sector]||0)+1);
+  const se=Object.entries(sc).sort((a,b)=>b[1]-a[1]);const smx=Math.max(1,...se.map(e=>e[1]));
+  $('#sectors').innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px">`+se.map(([k,v])=>{const a=.25+.75*v/smx;return `<button class="chip" style="background:rgba(182,255,59,${a*.35});border-color:rgba(182,255,59,${a});color:var(--text)" onclick="setSector('${esc(k)}')">${esc(k)} <b>${v}</b></button>`}).join('')+`</div><div class="k" style="margin-top:10px">click a sector to filter the database</div>`;
+
+  // compare
+  const u=D.filter(c=>c.country==='UAE'),g=D.filter(c=>c.country!=='UAE');
+  const rows=[['Corpses',u.length,g.length],['Median lifespan',median(u.map(life)).toFixed(1)+' yrs',median(g.map(life)).toFixed(1)+' yrs'],['Median raised',fmt$(median(u.filter(c=>c.raised).map(c=>c.raised))),fmt$(median(g.filter(c=>c.raised).map(c=>c.raised)))],['Top cause',mode(u.map(c=>c.cause)),mode(g.map(c=>c.cause))],['Top sector',mode(u.map(c=>c.sector)),mode(g.map(c=>c.sector))],['Acqui-shutdowns',u.filter(c=>c.status==='Acqui-shut').length,g.filter(c=>c.status==='Acqui-shut').length]];
+  $('#compare').innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase"><td style="padding:6px 0"></td><td style="color:#8be0a8">🇦🇪 UAE</td><td>Rest</td></tr>${rows.map(r=>`<tr style="border-top:1px dashed var(--line)"><td style="padding:8px 0;color:var(--muted)">${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td></tr>`).join('')}</table><div class="k" style="margin-top:10px">UAE corpses here live shorter and raise less — the Gulf kills early-stage, the US kills late-stage.</div>`;
+}
+
+function renderLists(){
+  const by=(f,n=10)=>[...D].sort(f).slice(0,n);
+  const L=[
+   ['💸 Biggest burns',by((a,b)=>b.raised-a.raised),c=>`<b>${esc(c.name)}</b> ${c.country==='UAE'?'🇦🇪':''} <em>${fmt$(c.raised)}</em>`],
+   ['⚰️ Shortest lives',by((a,b)=>life(a)-life(b)),c=>`<b>${esc(c.name)}</b> ${c.country==='UAE'?'🇦🇪':''} <em>${life(c).toFixed(1)} yrs</em>`],
+   ['🇦🇪 UAE by capital raised',D.filter(c=>c.country==='UAE').sort((a,b)=>b.raised-a.raised),c=>`<b>${esc(c.name)}</b> <em>${fmt$(c.raised)} · ${c.died}</em>`],
+   ['🔥 Fastest burn per year',by((a,b)=>b.raised/life(b)-a.raised/life(a)).filter(c=>c.raised),c=>`<b>${esc(c.name)}</b> <em>${fmt$(+(c.raised/life(c)).toFixed(0))}/yr</em>`]
+  ];
+  $("#homeLists").innerHTML=L.map(([t,arr,f])=>`<div class="t10"><h3>${t}</h3><ol>${arr.map(c=>`<li style="cursor:pointer" onclick="openCorpse('${c.id}')">${f(c)}</li>`).join('')}</ol></div>`).join('');
+}
+
+/* ===================== CASE OF THE WEEK ===================== */
+const CW={idx:0,cause:null,anti:null,revealed:false,mode:'week'};
+const CAUSES=[...new Set(D.map(c=>c.cause))].sort();
+function isoWeek(d){d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-day);const y=new Date(Date.UTC(d.getUTCFullYear(),0,1));return Math.ceil(((d-y)/864e5+1)/7)}
+function weekIndex(){const now=new Date();return (now.getFullYear()*53+isoWeek(now))%D.length}
+function antiFor(c){ // which antipattern lists this corpse
+  const i=ANTI.findIndex(a=>a.ex.toLowerCase().includes(c.name.toLowerCase().replace(/\.com|\s*\(.*\)/,'').split(' ')[0]));if(i>=0)return i;
+  const CM={'Cash mismanagement':0,'Failed to raise':0,'Fraud / no product':0,'Growth at all costs':1,'Unit economics':2,'Regulatory / tax exposure':3,'Acqui-shutdown':4,'Acqui-shut':4,'Parent pulled plug':5,'Market collapse':5,'Outcompeted':6,'Too early':6,'No market need':6,'Ran out of cash':0,'Flawed business model':2,'Scaling too fast':1,'Legal or regulatory issues':3,'Acquired or shut by owner':5,'No product-market fit':6,'Timing or market conditions':6,'Technology failure':6};return CM[c.detail]??CM[c.cause]??2}
+function redactName(c,txt){ // hide name, cause and status words
+  const words=[c.name,c.name.split(/[\s.]/)[0],c.cause];let out=esc(txt);
+  words.filter(w=>w&&w.length>2).forEach(w=>{out=out.replace(new RegExp(esc(w).replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),m=>`<span class="redact">${'█'.repeat(Math.min(m.length,10))}</span>`)});
+  // giveaway words that would hand students the diagnosis
+  out=out.replace(/\b(acqui[a-z-]*|liquidat[a-z]*|insolven[a-z]*|fraud[a-z]*|convicted|SPAC[a-z']*|Nasdaq|delist[a-z]*|Careem|Noon|Alabbar|Majid Al Futtaim|MAF|Farfetch|lawsuits?|tax(?:es)?|VAT|Zakat|bankrupt[a-z]*|Chapter 7|shut(?:s|ting)? down|ceased operations|pulled plug|parent)\b/gi,m=>`<span class="redact">${'█'.repeat(Math.min(m.length,10))}</span>`);
+  return out}
+function renderCase(){
+  const c=D[CW.idx];const a=antiFor(c);
+  const score=(()=>{try{return JSON.parse(localStorage.getItem('graveyard_cw')||'{"n":0,"ok":0}')}catch{return{n:0,ok:0}}})();
+  const r=CW.revealed;
+  $('#cw').innerHTML=`
+  <div class="file">
+    <div class="stamp">${r?'CASE CLOSED':'CAUSE REDACTED'}</div>
+    <div class="k">${CW.mode==='week'?`Week ${isoWeek(new Date())} · ${new Date().getFullYear()}`:'Random case'} · ${c.country==='UAE'?'🇦🇪 UAE wing':'Global wing'}</div>
+    <h3>${r?esc(c.name):`Case #${String(CW.idx+1).padStart(3,'0')}`}</h3>
+    <div class="sub" style="color:var(--muted);font-size:13px">${esc(c.city)}, ${esc(c.country)} · ${esc(c.sector)} · ${c.founded}–${c.died} · raised ${fmt$(c.raised)} · lived ${life(c).toFixed(1)} yrs</div>
+    <h4 style="font-family:var(--pix);font-size:10px;color:var(--amber);margin:18px 0 8px">▸ THE FILE</h4>
+    <p style="margin:0;font-size:14px">${r?esc(c.summary):redactName(c,c.summary)}</p>
+    <h4 style="font-family:var(--pix);font-size:10px;color:var(--amber);margin:18px 0 0">▸ EVIDENCE</h4>
+    <ul class="ev">${c.autopsy.map(x=>`<li>${r?esc(x):redactName(c,x)}</li>`).join('')}</ul>
+    ${r?`<h4 style="font-family:var(--pix);font-size:10px;color:var(--acid);margin:18px 0 8px">▸ OFFICIAL CAUSE OF DEATH</h4><div class="lesson"><b style="color:var(--amber)">${esc(c.cause)}</b> — antipattern ${ANTI[a].n} <b>${ANTI[a].t}</b>.<br><br>${esc(c.lesson)}</div><div class="tools"><button class="btn" onclick="openCorpse('${c.id}')">Full autopsy + rebuild plan →</button></div>`:''}
+  </div>
+  <div class="diag">
+    <div class="k">Step 1 · Diagnose the primary cause of death</div>
+    <div class="causes2">${CAUSES.map(k=>`<button class="opt ${CW.cause===k?(r?(k===c.cause?'right':'wrong'):'pick'):(r&&k===c.cause?'right':'')}" ${r?'disabled':''} onclick="CW.cause='${esc(k)}';renderCase()">${esc(k)}</button>`).join('')}</div>
+    <div class="k" style="margin-top:16px">Step 2 · Which antipattern is this?</div>
+    ${ANTI.map((x,i)=>`<button class="opt ${CW.anti===i?(r?(i===a?'right':'wrong'):'pick'):(r&&i===a?'right':'')}" ${r?'disabled':''} onclick="CW.anti=${i};renderCase()">${x.n} · ${x.t}</button>`).join('')}
+    <div class="k" style="margin-top:16px">Step 3 · One-line reasoning (optional)</div>
+    <textarea id="cwWhy" rows="2" placeholder="Because…" ${r?'disabled':''}>${esc(CW.why||'')}</textarea>
+    <div class="tools">
+      ${r?'':`<button class="btn p" onclick="revealCase()" ${CW.cause&&CW.anti!==null?'':'disabled style="opacity:.5"'}>Reveal the autopsy</button>`}
+      <button class="btn" onclick="CW.mode='week';CW.idx=weekIndex();resetCase()">This week's case</button>
+      <button class="btn" onclick="CW.mode='random';CW.idx=Math.floor(Math.random()*D.length);resetCase()">Random case</button>
+      <button class="btn u" onclick="CW.mode='random';const u=D.map((x,i)=>x.country==='UAE'?i:-1).filter(i=>i>=0);CW.idx=u[Math.floor(Math.random()*u.length)];resetCase()">🇦🇪 Random UAE case</button>
+    </div>
+    <div class="verdict ${r?'show':''}" id="cwVerdict">${r?caseVerdict(c,a):''}</div>
+    <div class="score">Your record: ${score.ok}/${score.n} correct diagnoses</div>
+    <div id="cwBoard"></div>
+  </div>`;
+  renderBoard();
+  const ta=$('#cwWhy');if(ta)ta.oninput=e=>CW.why=e.target.value;
+}
+function caseVerdict(c,a){
+  const okC=CW.cause===c.cause, okA=CW.anti===a;
+  const head=okC&&okA?'FULL MARKS — CORRECT DIAGNOSIS':okC||okA?'PARTIAL — HALF RIGHT':'MISDIAGNOSIS';
+  const col=okC&&okA?'var(--acid)':okC||okA?'var(--amber)':'var(--red)';
+  return `<b class="pix" style="display:block;font-size:11px;color:${col};margin-bottom:8px">${head}</b>
+    <div style="font-size:13px">Cause: you said <b>${esc(CW.cause)}</b> — actual <b style="color:var(--amber)">${esc(c.cause)}</b>.<br>Antipattern: you said <b>${ANTI[CW.anti].t}</b> — actual <b style="color:var(--amber)">${ANTI[a].t}</b>.</div>
+    ${CW.why?`<div style="font-size:12px;color:var(--muted);margin-top:8px">Your reasoning: "${esc(CW.why)}"</div>`:''}
+    <div style="font-size:12px;color:var(--muted);margin-top:8px">Discussion prompt: what single decision, made 12 months before death, would have changed the outcome?</div>`;
+}
+function revealCase(){
+  if(!CW.cause||CW.anti===null)return;
+  const c=D[CW.idx];const ok=CW.cause===c.cause&&CW.anti===antiFor(c);
+  try{const s=JSON.parse(localStorage.getItem('graveyard_cw')||'{"n":0,"ok":0}');s.n++;if(ok)s.ok++;localStorage.setItem('graveyard_cw',JSON.stringify(s))}catch{}
+  CW.revealed=true;renderCase();pushCW();
+}
+function resetCase(){CW.cause=null;CW.anti=null;CW.why='';CW.revealed=false;renderCase()}
+CW.idx=weekIndex();
+
+
+/* ===================== REBUILD META + IDEAS ===================== */
+const META={awok:['High','Medium','Next.js + Shopify Hydrogen + Stripe + local 3PL API'],fetchr:['High','Hard','Routing engine (OR-Tools) + WhatsApp Business API + per-country carrier adapters'],wadi:['Medium','Medium','Headless B2B catalog + ERP integrations + net-30 financing partner'],sprii:['Medium','Easy','Shopify subscriptions + private label via UAE contract manufacturers'],modist:['Medium','Medium','DTC Shopify + wholesale EDI to Farfetch/Ounass'],nisnass:['Low','Easy','n/a — structural lesson'],mizado:['Low','Easy','Refurb marketplace + warranty escrow'],jadopado:['High','Medium','Multi-channel seller SaaS (Noon/Amazon.ae/Instagram APIs)'],munchon:['Medium','Medium','B2B ordering portal + kitchen capacity planner'],swvl:['High','Hard','Fleet routing SaaS licensed to operators; AED-denominated contracts'],silkhaus:['High','Easy','Holiday-home compliance + pricing SaaS, per-unit billing'],
+quibi:['Medium','Medium','Vertical video CMS + creator payouts'],theranos:['Medium','Hard','Partner-lab LIS integration + published validation'],fast:['Medium','Medium','Regional APMs checkout SDK'],airlift:['Medium','Medium','Franchise dark-store SaaS'],olive:['High','Hard','Prior-auth automation with LLM + payer APIs'],forward:['Low','Hard','Pharmacy kiosk, single condition'],kite:['High','Hard','LLM code assistant (already rebuilt)'],webvan:['High','Medium','Gig-picker grocery on existing stores'],pets:['High','Easy','Autoship DTC with margin gates'],jawbone:['Medium','Hard','Medical wearable via insurers'],zume:['Low','Easy','Compostable packaging only'],argo:['Medium','Hard','ADAS licensing'],convoy:['Medium','Medium','Broker SaaS, no load risk'],insteon:['Medium','Medium','Local-first (Matter) hub'],anki:['Medium','Hard','Licensed IP + subscription content'],dunzo:['Medium','Medium','B2B kirana last-mile'],koo:['Low','Medium','Creator tooling on existing networks'],sonder:['High','Easy','Franchise brand + software to owners'],juicero:['Medium','Easy','Juice subscription without hardware'],beepi:['Medium','Hard','Owned inspection + financing margin'],homejoy:['Medium','Medium','Employed cleaners, recurring contracts'],essential:['Low','Hard','Ambient OS licensed to OEMs']};
+D.forEach(c=>{const m=META[c.id]||['Medium','Medium','TBD'];c.mp=m[0];c.build=m[1];c.stack=m[2]});
+
+const IDEAS=[
+['Margin-gated value marketplace (UAE)','Low-price marketplace where a SKU only goes live if contribution margin is positive after delivery and returns. Vendor-fulfilled, marketplace escrow.','Marketplace','6+ months','Long game','Ecommerce',['uae','gcc','unit-economics'],'awok'],
+['KSA entry-as-a-service','Productised Saudi market entry for UAE startups: MISA licence, ZATCA/VAT registration, local entity, bank account, in 60 days.','Agency','1–3 months','Quick cash','Legal',['uae','ksa','regulatory'],'fetchr'],
+['GCC address-resolution API','Phone-GPS and landmark-based address normalisation sold to couriers and e-commerce as an API, not a fleet.','SaaS','1–3 months','Medium runway','Logistics',['api','gcc','logistics'],'fetchr'],
+['SME procurement portal for restaurants (UAE)','B2B ordering for F&B supplies with net-30 financing; margins negotiated, not raced to zero.','B2B contract','6+ months','Long game','Ecommerce',['b2b','uae','fnb'],'wadi'],
+['Parenting autoship box (GCC)','Age-staged consumables on subscription with 40% private-label mix. UAE-only until margin proven.','Subscription','1–3 months','Medium runway','Ecommerce',['uae','subscription','private-label'],'sprii'],
+['Modest luxury house (own brands)','DTC modest-fashion label manufactured regionally and wholesaled to the incumbents\' modest edits.','One-time','6+ months','Long game','Fashion',['brand','gcc','wholesale'],'modist'],
+['Multi-channel seller cockpit for GCC merchants','One dashboard for Noon, Amazon.ae, Instagram and WhatsApp orders, inventory and VAT.','SaaS','1–3 months','Medium runway','Ecommerce',['saas','sellers','uae'],'jadopado'],
+['Campus canteen-as-a-service','Contracted, prepaid meal supply for free-zone campuses and labour accommodations.','B2B contract','1–3 months','Quick cash','Food',['b2b','uae','food'],'munchon'],
+['School-bus routing SaaS (AED-priced)','Routing and parent-tracking software licensed to existing school-transport operators.','SaaS','1–3 months','Medium runway','Mobility',['saas','schools','uae'],'swvl'],
+['Holiday-home compliance SaaS (Dubai)','DET permit tracking, guest ID, dynamic pricing — billed per unit to licence-holders. Zero leases.','SaaS','1–3 months','Quick cash','Proptech',['saas','dubai','str'],'silkhaus'],
+['Refurbished-device marketplace with GCC warranty','Certified refurb phones/laptops with escrowed 12-month warranty; trust is the product.','Marketplace','6+ months','Medium runway','Ecommerce',['refurb','trust','gcc'],'mizado'],
+['Corporate-venture spin-out kit','Templates and cap-table structures that let corporate ventures take outside money so the parent can\'t switch them off.','One-time','Weekend project','Quick cash','Legal',['corporate','venture'],'nisnass'],
+['Vertical micro-drama studio (Arabic)','Short serialised vertical video for Arabic audiences, monetised per episode, creator-first.','Subscription','6+ months','Long game','Media',['media','arabic','vertical-video'],'quibi'],
+['Regional payment-methods checkout SDK','One SDK for Tabby, Tamara, Apple Pay, mada, STC Pay, cash-on-delivery.','SaaS','1–3 months','Medium runway','Fintech',['fintech','checkout','gcc'],'fast'],
+['Dark-store franchise software','Software and supply for existing corner shops to run 20-minute delivery; no owned stores.','SaaS','6+ months','Long game','Ecommerce',['quick-commerce','franchise'],'airlift'],
+['Prior-authorisation automation for UAE insurers','LLM-assisted pre-approval with measurable denial-rate reduction; one workflow only.','SaaS','6+ months','Long game','Health',['health','insurance','ai'],'olive'],
+['Pharmacy health kiosks (single condition)','Nurse-supervised hypertension/diabetes monitoring stations inside pharmacy chains.','B2B contract','6+ months','Medium runway','Health',['health','kiosk'],'forward'],
+['Gig-picker grocery on existing supermarkets','Instacart model for Lulu/Carrefour-style chains in secondary cities; no warehouses.','Marketplace','6+ months','Medium runway','Ecommerce',['grocery','gig'],'webvan'],
+['Pet autoship with margin discipline','Chewy-style autoship for the GCC pet market, heavy items priced to margin.','Subscription','1–3 months','Medium runway','Ecommerce',['pets','subscription'],'pets'],
+['Local-first smart-home hub','Matter-based hub that works with the cloud off — sold on the promise that it can\'t be bricked.','One-time','6+ months','Long game','Hardware',['hardware','iot'],'insteon'],
+['Freight broker SaaS (no load risk)','Pure software for GCC freight brokers: quoting, tracking, documents. Never own the margin on a load.','SaaS','1–3 months','Medium runway','Logistics',['logistics','saas'],'convoy'],
+['Apartment-hotel franchise system','Brand standards + software licensed to building owners; owners hold the leases.','SaaS','6+ months','Long game','Proptech',['proptech','franchise'],'sonder'],
+['Employed-cleaner home services','Salaried cleaners on recurring contracts; sells reliability, not discounts.','Subscription','1–3 months','Quick cash','Services',['services','labour'],'homejoy'],
+['Owned-inspection used-car platform','Inspection centres + financing margin; the inspection report is the product.','Marketplace','6+ months','Long game','Automotive',['auto','inspection'],'beepi'],
+['Juice subscription without the press','Cold-pressed packs delivered weekly; the $400 machine was never the point.','Subscription','Weekend project','Quick cash','Food',['food','subscription'],'juicero'],
+['Vernacular creator tools','Arabic/Urdu/Malayalam captioning, scheduling and monetisation layered on existing networks.','SaaS','1–3 months','Medium runway','Social',['creators','language'],'koo'],
+['Compostable packaging for cloud kitchens','Zume\'s only real business, rebuilt for the UAE\'s cloud-kitchen boom.','One-time','1–3 months','Quick cash','Food',['packaging','sustainability'],'zume'],
+['Kirana/baqala last-mile B2B','Delivery from wholesalers to corner shops; dense routes, recurring orders.','B2B contract','6+ months','Medium runway','Logistics',['b2b','retail'],'dunzo'],
+['Supplier-debt early-warning index','Scrapes court filings, Reddit, job boards and delivery reviews to flag startups that stopped paying — sell to suppliers and VCs.','Subscription','1–3 months','Quick cash','Data',['data','credit','gcc'],'awok'],
+['Startup autopsy curriculum (GCC)','Case packs, slide decks and the Case-of-the-Week format licensed to universities and accelerators.','One-time','Weekend project','Quick cash','Education',['education','uae'],'swvl']
+];
+function renderIdeas(list){
+  list=list||IDEAS;
+  $('#iCount').textContent=`${list.length} of ${IDEAS.length} ideas`;
+  $('#ideaGrid').innerHTML=list.map(i=>`<div class="idea"><h4>${esc(i[0])}</h4><p>${esc(i[1])}</p><div class="tags"><span class="o">${esc(i[2])}</span><span>${esc(i[3])}</span><span>${esc(i[4])}</span><span>${esc(i[5])}</span>${i[6].map(t=>`<span>#${esc(t)}</span>`).join('')}</div><button class="btn" style="padding:7px 10px;font-size:10px;align-self:flex-start" onclick="openCorpse('${i[7]}')">Looted from: ${esc(D.find(c=>c.id===i[7]).name)} →</button></div>`).join('');
+}
+function filterIdeas(){
+  const m=$('#iModel').value,e=$('#iEffort').value,sp=$('#iSpeed').value,ind=$('#iInd').value,q=$('#iQ').value.trim();
+  renderIdeas(IDEAS.filter(i=>(!m||i[2]===m)&&(!e||i[3]===e)&&(!sp||i[4]===sp)&&(!ind||i[5]===ind)&&(!q||fuzzy(i[0]+' '+i[1]+' '+i[6].join(' '),q))));
+}
+function luckyLoot(){renderIdeas([...IDEAS].sort(()=>Math.random()-.5).slice(0,5));$('#iCount').textContent='🎲 Your lucky loot — 5 random ideas'}
+
+const RB={s:'',c:'',ca:'',mp:'',sort:'newest'};
+function rbClear(){RB.s=RB.c=RB.ca=RB.mp='';['rSector','rCountry','rCause','rMp'].forEach(i=>$('#'+i).value='');renderRebuilds()}
+function renderRebuilds(){
+  let r=D.filter(c=>(!RB.s||c.sector===RB.s)&&(!RB.c||c.country===RB.c)&&(!RB.ca||c.cause===RB.ca)&&(!RB.mp||c.mp===RB.mp));
+  const mpv={High:3,Medium:2,Low:1},bv={Easy:3,Medium:2,Hard:1};
+  if(RB.sort==='newest')r.sort((a,b)=>b.died-a.died);if(RB.sort==='mp')r.sort((a,b)=>mpv[b.mp]-mpv[a.mp]);if(RB.sort==='easy')r.sort((a,b)=>bv[b.build]-bv[a.build]);if(RB.sort==='funded')r.sort((a,b)=>b.raised-a.raised);
+  $('#rCount').textContent=`${r.length} rebuild plans`;
+  $('#rbGrid').innerHTML=r.map(c=>`<div class="rb"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h4>${c.country==='UAE'?'🇦🇪 ':''}Rebuild: ${esc(c.name)}</h4><div style="display:flex;gap:6px"><span class="mp ${c.mp}">Market: ${c.mp}</span><span class="mp Medium" style="color:var(--cyan);border-color:#1f4a5a">Build: ${c.build}</span></div></div>
+   <div class="sub" style="color:var(--muted);font-size:12px">${esc(c.sector)} · ${esc(c.city)}, ${esc(c.country)} · died ${c.died} after ${fmt$(c.raised)} · cause: ${esc(c.cause)}</div>
+   <div class="steps"><div><div class="k">1 · What to build</div>${esc(c.rebuild)}</div><div><div class="k">2 · Market analysis</div>Validated demand: ${esc(c.summary.split('. ')[0])}. Market potential rated ${c.mp}.</div><div><div class="k">3 · Build steps</div>Prove one market/unit → gate growth on margin → expand only on operating profit. Difficulty: ${c.build}.</div><div><div class="k">4 · Tech stack</div>${esc(c.stack)}</div><div><div class="k">5 · Revenue model</div>${esc(revModel(c))}</div></div>
+   <div class="lesson"><b>Mistake to avoid:</b> ${esc(c.lesson)}</div></div>`).join('');
+}
+function revModel(c){const m={'E-commerce':'Take-rate + private-label margin; no inventory risk','Logistics':'Per-shipment API fee + SaaS seat','Fashion':'DTC gross margin 55%+ and wholesale','Food delivery':'Prepaid B2B contracts, monthly','Mobility':'Per-vehicle SaaS licence, annual','Proptech':'Per-unit monthly SaaS','Healthtech':'Per-transaction fee to payer/provider','Hardware':'Device margin + optional subscription','Quick commerce':'Franchise fee + software subscription','Media':'Per-episode micro-payments + ads','Fintech':'Per-transaction + SDK licence','Developer tools':'Seat-based subscription','Marketplace':'Transaction fee + financing margin','Social':'Creator-tool subscriptions','Autonomy':'Per-vehicle licensing','Services':'Recurring contracts'};return m[c.sector]||'Subscription'}
+
+function renderPages(){
+  // lists
+  const by=(f,arr=D,n=10)=>[...arr].sort(f).slice(0,n);
+  const li=(c,extra)=>`<li style="cursor:pointer" onclick="openCorpse('${c.id}')"><b>${esc(c.name)}</b> ${c.country==='UAE'?'🇦🇪':''} <em>${extra}</em></li>`;
+  const sectors=[...new Set(D.map(c=>c.sector))];
+  const L=[['💸 Biggest burns',by((a,b)=>b.raised-a.raised),c=>fmt$(c.raised)],['⚰️ Shortest lives',by((a,b)=>life(a)-life(b)),c=>life(c).toFixed(1)+' yrs'],['🇦🇪 UAE by capital raised',by((a,b)=>b.raised-a.raised,D.filter(c=>c.country==='UAE')),c=>fmt$(c.raised)+' · '+c.died],['🔥 Fastest burn per year',by((a,b)=>b.raised/life(b)-a.raised/life(a),D.filter(c=>c.raised)),c=>fmt$(+(c.raised/life(c)).toFixed(0))+'/yr'],['🧟 Zombies & acqui-shutdowns',D.filter(c=>c.status!=='Dead'),c=>c.status],['🕰️ Longest-lived corpses',by((a,b)=>life(b)-life(a)),c=>life(c).toFixed(1)+' yrs'],['📅 Most recent deaths',by((a,b)=>b.died-a.died),c=>String(c.died)],['🛒 Top e-commerce failures',by((a,b)=>b.raised-a.raised,D.filter(c=>c.sector==='E-commerce'||c.sector==='Fashion')),c=>fmt$(c.raised)],['🏥 Healthtech failures',by((a,b)=>b.raised-a.raised,D.filter(c=>c.sector==='Healthtech')),c=>fmt$(c.raised)],['🤖 Hardware failures',by((a,b)=>b.raised-a.raised,D.filter(c=>c.sector==='Hardware')),c=>fmt$(c.raised)],['🚚 Logistics & mobility failures',by((a,b)=>b.raised-a.raised,D.filter(c=>/Logistics|Mobility|Quick/.test(c.sector))),c=>fmt$(c.raised)],['💥 Died within 3 years of founding',D.filter(c=>life(c)<=3).sort((a,b)=>b.raised-a.raised),c=>fmt$(c.raised)+' in '+life(c).toFixed(1)+' yrs']];
+  $('#allLists').innerHTML=L.map(([t,arr,f])=>`<div class="t10"><h3>${t}</h3><ol>${arr.slice(0,10).map(c=>li(c,f(c))).join('')||'<li>—</li>'}</ol></div>`).join('');
+  // insights
+  const ls=D.map(life);$('#insSurvText').textContent=`Across ${D.length} corpses the median lifespan is ${median(ls).toFixed(1)} years; ${Math.round(ls.filter(v=>v<=3).length/ls.length*100)}% were dead within three years of founding and ${Math.round(ls.filter(v=>v>=8).length/ls.length*100)}% survived eight or more. UAE corpses: median ${median(D.filter(c=>c.country==='UAE').map(life)).toFixed(1)} years. All curves reach 0% — see the dashboard.`;
+  const cc={};D.forEach(c=>cc[c.cause]=(cc[c.cause]||0)+1);const ce=Object.entries(cc).sort((a,b)=>b[1]-a[1]);
+  $('#insTable').innerHTML='<tr><th>Rank</th><th>Category</th><th>Count</th><th>Freq %</th><th>UAE examples</th></tr>'+ce.map(([k,v],i)=>`<tr><td>${i+1}</td><td><b>${esc(k)}</b></td><td>${v}</td><td>${Math.round(v/D.length*100)}%</td><td style="color:var(--muted)">${D.filter(c=>c.cause===k&&c.country==='UAE').map(c=>c.name).join(', ')||'—'}</td></tr>`).join('');
+  const pats=[['🛒 E-commerce',['E-commerce','Fashion'],'Discount-led growth with negative contribution margin, then a failed round.','"Raising money is not the same as making it."'],['🚚 Logistics & mobility',['Logistics','Mobility','Quick commerce'],'Capex-heavy fleets and warehouses built ahead of demand; regulatory and currency exposure across borders.','"Logistics is a ground war. Software margins don\'t survive contact with a truck."'],['🏥 Health & biotech',['Healthtech'],'Promises automation, delivers people; regulated science without reproducible results.','"If margins don\'t improve with volume, it isn\'t software."'],['🤖 Hardware',['Hardware'],'Consumer devices against Apple/Google; cloud dependence that bricks the product at death.','"Hardware against a duopoly is a war of attrition you fund alone."'],['📱 Media & social',['Media','Social'],'Network effects never cross the threshold; demand assumed, not validated.','"Social networks are binary: default or dead."'],['🏠 Proptech',['Proptech'],'Tech-enabled operators that are really hotels holding leases.','"A lease is a liability with a nicer dashboard."']];
+  $('#insPatterns').innerHTML=pats.map(([t,ss,pat,q])=>{const arr=D.filter(c=>ss.includes(c.sector));if(!arr.length)return'';return`<div class="ins"><h4>${t}</h4><div class="k">Primary killer: ${mode(arr.map(c=>c.cause))}</div><p style="margin:8px 0"><b>Pattern:</b> ${pat} Corpses: ${arr.map(c=>c.name).join(', ')}.</p><p style="color:var(--amber);font-style:italic">${q}</p></div>`}).join('');
+  // deep dives
+  $('#ddCount').textContent=sectors.length;
+  $('#ddGrid').innerHTML=sectors.sort().map(sct=>{const arr=D.filter(c=>c.sector===sct);return`<div class="ap"><div class="n" style="font-size:12px">${esc(sct).toUpperCase()}</div><h3>${arr.length} corpse${arr.length>1?'s':''} · ${fmt$(arr.reduce((s,c)=>s+c.raised,0))} burned</h3><p><b>Primary killer:</b> ${mode(arr.map(c=>c.cause))} · <b>Median life:</b> ${median(arr.map(life)).toFixed(1)} yrs${arr.some(c=>c.country==='UAE')?' · 🇦🇪 '+arr.filter(c=>c.country==='UAE').length+' UAE':''}</p><div class="ex">${arr.map(c=>`<a href="javascript:void(0)" onclick="openCorpse('${c.id}')">${esc(c.name)}</a>`).join(' · ')}</div><button class="btn" style="margin-top:12px;padding:7px 10px;font-size:10px" onclick="location.hash='database';setSector('${esc(sct)}')">Open in database →</button></div>`}).join('');
+  // ideas filters
+  $('#iInd').innerHTML='<option value="">All industries</option>'+[...new Set(IDEAS.map(i=>i[5]))].sort().map(x=>`<option>${x}</option>`).join('');
+  ['iModel','iEffort','iSpeed','iInd'].forEach(i=>$('#'+i).onchange=filterIdeas);$('#iQ').oninput=filterIdeas;renderIdeas();
+  // rebuild filters
+  $('#rSector').innerHTML='<option value="">All sectors</option>'+sectors.sort().map(x=>`<option>${x}</option>`).join('');$('#rCountry').innerHTML='<option value="">All countries</option>'+[...new Set(D.map(c=>c.country))].sort().map(x=>`<option>${x}</option>`).join('');$('#rCause').innerHTML='<option value="">All causes</option>'+[...new Set(D.map(c=>c.cause))].sort().map(x=>`<option>${x}</option>`).join('');
+  $('#rSector').onchange=e=>{RB.s=e.target.value;renderRebuilds()};$('#rCountry').onchange=e=>{RB.c=e.target.value;renderRebuilds()};$('#rCause').onchange=e=>{RB.ca=e.target.value;renderRebuilds()};$('#rMp').onchange=e=>{RB.mp=e.target.value;renderRebuilds()};
+  $('#rSort').onclick=e=>{const b=e.target.closest('button');if(!b)return;[...$('#rSort').children].forEach(x=>x.classList.remove('on'));b.classList.add('on');RB.sort=b.dataset.s;renderRebuilds()};renderRebuilds();
+  // story + roadmap
+  $('#storyLoot').textContent=D.length+' startups';
+  const RM=[['FORENSICS','UAE Wing','Verified UAE cases with sources, timeline and patterns','✅ Live'],['CLASSROOM','Case of the Week','Redacted file, diagnose before reveal, per-browser score','✅ Live'],['FORENSICS','Burn Zone / survival / cause charts','Hand-rolled SVG forensics dashboard','✅ Live'],['SALVAGE','Rebuild Plans','5-step plan per corpse with stack and revenue model','✅ Live'],['SALVAGE','Ideas directory','Filterable ideas looted from autopsies','✅ Live'],['FORENSICS','The Death Clock','Runway remaining estimates for still-living GCC startups from public signals','🟡 Planned'],['FORENSICS','Silence Watch','Flag startups whose blog, app store and LinkedIn have gone quiet for 90+ days','🟡 Planned'],['FORENSICS','The Pivot Detector','Diff of a startup\'s own description over time','🟡 Planned'],['OVERHEATING','The Ratio of Doom','Funding raised vs. disclosed revenue, GCC edition','🟡 Planned'],['OVERHEATING','VC Widowmakers','Which investors appear most often on the tombstones','🟡 Planned'],['GLOBAL','Clone Wars Casualties','Rocket-style clones that died in MENA (Mizado, Wadi…)','🟡 Planned'],['GLOBAL','Crypto Graveyard','Dubai-registered crypto ventures that vanished','🟡 Planned'],['SALVAGE','Domain & IP sale tracker','What happened to the brand, domain and app after death','🟡 Planned'],['COMMUNITY','Student autopsy submissions','Classes submit case files that render as cards; export/import JSON','✅ Live'],['EDITORIAL','Featured long-form autopsies','Awok, Fetchr, Swvl as 5-minute reads','✅ Live'],['COMMUNITY','Diagnosis leaderboard','Class-level scores for Case of the Week','🟡 Planned'],['DATA','Bilingual (AR/EN)','Arabic version of the UAE wing','🟡 Planned']];
+  $('#roadTbl').innerHTML='<tr><th>Category</th><th>Feature</th><th>What is it</th><th>Status</th></tr>'+RM.map(r=>`<tr><td style="color:var(--amber);font-size:11px;letter-spacing:.1em">${r[0]}</td><td><b>${r[1]}</b></td><td style="color:var(--muted)">${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+}
+
+
+/* ===================== DATABASE VIEW ===================== */
+const DV={q:'',sort:'newest',sector:'',type:'',country:'',cause:'',status:'',page:0,per:25};
+function scores(c){const mp={High:5,Medium:3,Low:2}[c.mp]||3,sc=Math.max(1,Math.min(5,Math.round(Math.log10((c.raised||1)+1)*1.5))),rb={Easy:5,Medium:3,Hard:2}[c.build]||3;return[mp,sc,rb]}
+function bar(v,col){return `<span title="${v}/5" style="display:inline-flex;gap:2px;margin-right:8px">${[1,2,3,4,5].map(i=>`<i style="width:6px;height:10px;display:inline-block;background:${i<=v?col:'var(--line)'}"></i>`).join('')}</span>`}
+function dvClear(){Object.assign(DV,{q:'',sector:'',type:'',country:'',cause:'',status:'',page:0});['dvQ','dvSector','dvType','dvCountry','dvCause','dvStatus'].forEach(i=>$('#'+i).value='');renderDV()}
+function renderDV(){
+  let r=D.filter(c=>(!DV.sector||c.sector===DV.sector)&&(!DV.type||c.type===DV.type)&&(!DV.country||c.country===DV.country)&&(!DV.cause||c.cause===DV.cause)&&(!DV.status||c.status===DV.status)&&(!DV.q||fuzzy([c.name,c.summary,c.cause,c.city,c.country].join(' '),DV.q)));
+  if(DV.sort==='newest')r.sort((a,b)=>b.died-a.died||b.raised-a.raised);if(DV.sort==='burned')r.sort((a,b)=>b.raised-a.raised);if(DV.sort==='died')r.sort((a,b)=>life(a)-life(b));if(DV.sort==='name')r.sort((a,b)=>a.name.localeCompare(b.name));
+  const pages=Math.max(1,Math.ceil(r.length/DV.per));DV.page=Math.min(Math.max(0,DV.page),pages-1);
+  const slice=r.slice(DV.page*DV.per,(DV.page+1)*DV.per);
+  $('#dvCount').textContent=`${r.length} startups · ${new Set(r.map(c=>c.country)).size} countries · ${fmt$(r.reduce((s,c)=>s+c.raised,0))} burned`;
+  $('#dvPage').textContent=`Page ${DV.page+1} / ${pages}`;
+  $('#dvTable').innerHTML='<tr><th>Startup</th><th>Country</th><th>Sector</th><th>Type</th><th>Funding</th><th>Died</th><th>Cause</th><th>Scores</th></tr>'+slice.map(c=>{const [a,b,d]=scores(c);return`<tr style="cursor:pointer" onclick="openCorpse('${c.id}')"><td><b>${esc(c.name)}</b> ${c.v?'<span style="color:var(--acid);font-size:10px">✓</span>':''}<br><span style="color:var(--dim);font-size:11px">${esc(c.status)}</span></td><td>${c.country==='UAE'?'🇦🇪 ':''}${esc(c.country)}</td><td>${esc(c.sector)}</td><td style="color:var(--muted)">${esc(c.type)}</td><td><b>${fmtA(c)}</b></td><td>${c.died}</td><td style="color:var(--amber)">${esc(c.cause)}</td><td style="white-space:nowrap">${bar(a,'var(--acid)')}${bar(b,'var(--amber)')}${bar(d,'var(--cyan)')}<div style="font-size:9px;color:var(--dim);letter-spacing:.08em">MARKET · SCALE · REBUILD</div></td></tr>`}).join('')||'<tr><td colspan="8" style="color:var(--muted);padding:30px;text-align:center">No corpses found.</td></tr>';
+}
+function initDVOptions(){
+  const opt=(id,arr,first)=>$('#'+id).innerHTML=`<option value="">${first}</option>`+[...new Set(arr)].sort().map(x=>`<option>${x}</option>`).join('');
+  opt('dvSector',D.map(c=>c.sector),'All sectors');opt('dvType',D.map(c=>c.type),'All product types');opt('dvCountry',D.map(c=>c.country),'All countries');opt('dvCause',D.map(c=>c.cause),'All causes of death');
+}
+function initDV(){initDVOptions();
+  const bind=(id,key)=>$('#'+id).onchange=e=>{DV[key]=e.target.value;DV.page=0;renderDV()};
+  bind('dvSort','sort');bind('dvSector','sector');bind('dvType','type');bind('dvCountry','country');bind('dvCause','cause');bind('dvStatus','status');
+  let tt;$('#dvQ').oninput=e=>{clearTimeout(tt);tt=setTimeout(()=>{DV.q=e.target.value.trim();DV.page=0;renderDV()},120)};
+  renderDV();
+}
+
+/* ===================== ROUTING ===================== */
+const PAGES=['featured','lists','insights','deep-dives','ideas','rebuilds','story','roadmap','database-view'];
+function route(){
+  const h=location.hash.slice(1);
+  const sub=PAGES.includes(h);
+  document.querySelectorAll('main > section:not(.page)').forEach(x=>x.style.display=sub?'none':'');
+  document.querySelectorAll('main > section.page').forEach(x=>x.classList.toggle('show',x.id===h));
+  if(sub){window.scrollTo(0,0)}else if(h){const el=document.getElementById(h);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth'}),30)}
+}
+function toggleNav(){$('#navov').classList.toggle('open')}
+window.addEventListener('hashchange',route);
+
+/* ===================== EVENTS ===================== */
+$('#sortSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;[...$('#sortSeg').children].forEach(x=>x.classList.remove('on'));b.classList.add('on');state.sort=b.dataset.sort;render()});
+$('#regionChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;[...$('#regionChips').children].forEach(x=>x.classList.remove('on'));b.classList.add('on');state.region=b.dataset.region;render()});
+$('#sectorChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setSector(b.dataset.sector||null)});
+function setSector(s){state.sector=s||null;[...$('#sectorChips').children].forEach(x=>x.classList.toggle('on',(x.dataset.sector||null)===state.sector));render();document.getElementById('database').scrollIntoView({behavior:'smooth'})}
+function initCountrySel(){const v=$('#countrySel').value;$('#countrySel').innerHTML='<option value="">🌍 All countries</option>'+[...new Set(D.map(c=>c.country))].sort().map(x=>`<option>${x}</option>`).join('');$('#countrySel').value=v}initCountrySel();$('#countrySel').onchange=e=>{state.country=e.target.value;render()};
+let t;$('#q').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>{state.q=e.target.value.trim();render()},120)});
+
+
+renderStatic();render();renderCase();renderPages();initDV();renderRails();renderFeatured();route();initShared();
+</script>
+</body>
+</html>
